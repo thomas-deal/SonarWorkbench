@@ -1,9 +1,5 @@
-function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype,baffle,psi,theta,lambda,varargin)
-%% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype,baffle,psi,theta,lambda)
-% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype=0,baffle,psi,theta,lambda)
-% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype=1,baffle,psi,theta,lambda,a)
-% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype=2,baffle,psi,theta,lambda,w,h)
-% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype=3,baffle,psi,theta,lambda,a,rotate)
+function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,Element,lambda,psi,theta)
+%% function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,Element,lambda,psi,theta)
 %
 % Computes the beam pattern for an array of identical elements at
 % coordinates (ex,ey,ez) rotated (epsi,etheta) from the x axis with complex
@@ -20,63 +16,96 @@ function D = BeamPattern(ex,ey,ez,epsi,etheta,ew,etype,baffle,psi,theta,lambda,v
 %           epsi    - Element normal azimuth vector, deg
 %           etheta  - Element normal elevation vector, deg
 %           ew      - Complex element weight vector
-%           etype   - Element type enumeration
-%                     0 = omnidirectional
-%                     1 = circular plane piston
-%                     2 = rectangular plane piston
-%                     3 = hexagonal plane piston
-%           baffle  - Element baffle enumeration
-%                     0 = No baffle
-%                     1 = Hard baffle
-%                     2 = Raised cosine baffle
-%           psi     - Azimuthal angle vector, deg
-%           theta   - Elevation angle vector, deg
+%           Element - Element structure with the following fields
+%               .type   - Element type enumeration
+%                         0 = omnidirectional
+%                         1 = circular plane piston
+%                         2 = rectangular plane piston
+%                         3 = hexagonal plane piston
+%               .baffle - Element baffle enumeration
+%                         0 = No baffle
+%                         1 = Hard baffle
+%                         2 = Raised cosine baffle
+%               .a      - Circular piston diameter, m
+%               .w      - Rectangular piston width, m
+%               .h      - Rectangular piston height, m
+%               .a      - Hexagonal element inscribed circle radius, m
+%               .rotate - Hexagonal element rotation, see 
+%                         HexagonalPistonElement.m for details
 %           lambda  - Acoustic wavelength, m
+%           psi     - Azimuthal angle vector or matrix, deg
+%           theta   - Elevation angle vector or matrix, deg
 % 
-% Optional Inputs:
-%           a       - Circular piston diameter, m
-%           w       - Rectangular piston width, m
-%           h       - Rectangular piston height, m
-%           a       - Hexagonal element inscribed circle radius, m
-%           rotate  - Hexagonal element rotation, see 
-%                     HexagonalPistonElement.m for details
 %
 % Outputs:
 %           D       - Beam pattern, complex linear units
 %
 
+%% Initialize
+D = 1;
+%% Check Input Dimensions
+resize = 0;
+thetaSize = size(theta);
+psiSize = size(psi);
+if min(thetaSize)==1
+    if min(psiSize)==1
+        resize = 1;
+    else
+        disp('BeamPattern: Inputs psi and theta have incompatible dimensions')
+        return
+    end
+else
+    if min(psiSize)==1
+        disp('BeamPattern: Inputs psi and theta have incompatible dimensions')
+        return
+    end
+end
+if resize
+    [Theta,Psi] = ndgrid(theta,psi);
+else
+    Theta = theta;
+    Psi = psi;
+    dtheta = diff(Theta(1:2,1));
+    thetamin = min(Theta(:));
+    thetamax = max(Theta(:));
+    dpsi = diff(Psi(1,1:2));
+    psimin = min(Psi(:));
+    psimax = max(Psi(:));
+    theta = thetamin:dtheta:thetamax;
+    psi = psimin:dpsi:psimax;
+end
 %% Check Input Arguments
 a = lambda/4;
 w = lambda/2;
 h = lambda/2;
 rotate = 0;
-switch etype
-    case 1
-        if nargin==12&&~isempty(varargin{1})
-            a = varargin{1};
-        end
-    case 2
-        if nargin==13
-            if ~isempty(varargin{1})
-                w = varargin{1};
-            end
-            if ~isempty(varargin{2})
-                h = varargin{2};
-            end
-        end
-    case 3
-        if nargin>=12
-            if ~isempty(varargin{1})
-                a = varargin{1};
-            end
-            if nargin==13&&~isempty(varargin{2})
-                rotate = varargin{2};
-            end
-        end
+baffle = 0;
+if isfield(Element,'a')
+    if ~isempty(Element.a)
+        a = Element.a;
+    end
 end
-baffle = max(min(baffle,2),0);
-%% Computational Grid
-[Theta,Psi] = ndgrid(theta,psi);
+if isfield(Element,'w')
+    if ~isempty(Element.w)
+        w = Element.w;
+    end
+end
+if isfield(Element,'h')
+    if ~isempty(Element.h)
+        h = Element.h;
+    end
+end
+if isfield(Element,'rotate')
+    if ~isempty(Element.rotate)
+        rotate = Element.rotate;
+    end
+end
+if isfield(Element,'baffle')
+    if ~isempty(Element.baffle)
+        baffle = Element.baffle;
+    end
+end
+%% Spatial Grid
 fx = cosd(-Theta).*cosd(Psi)/lambda;
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
@@ -92,31 +121,15 @@ for i=1:Ne
     if(epsi(i)~=psilast)||(etheta(i)~=thetalast)
         psilast = epsi(i);
         thetalast = etheta(i);
-        switch etype
+        switch Element.type
             case 0     
-                E = OmnidirectionalElement(psi-epsi(i),theta-etheta(i));
+                E = OmnidirectionalElement(psi,theta);
             case 1
-                E = CircularPistonElement(psi-epsi(i),theta-etheta(i),lambda,a);
+                E = CircularPistonElement(a,lambda,Psi,Theta,epsi(i),etheta(i),baffle);
             case 2
-                E = RectangularPistonElement(psi-epsi(i),theta-etheta(i),lambda,w,h);
+                E = RectangularPistonElement(w,h,lambda,Psi,Theta,epsi(i),etheta(i),baffle);
             case 3
-                E = HexagonalPistonElement(psi-epsi(i),theta-etheta(i),lambda,a,rotate);
-        end
-        if baffle>0
-            % Baffle element with array structure
-            Phi = acosd(cosd(Psi-epsi(i)).*cosd(Theta-etheta(i)));
-            switch baffle
-                case 1      % Hard baffle
-                    Baf = ones(size(E));
-                    Baf(Phi>90) = eps;
-                case 2      % Raised cosine baffle
-                    Baf = 1/2+1/2*cosd(4*Phi);
-                    Baf(Phi<=90) = 1;
-                    Baf(Phi>135) = eps;
-                otherwise   % No baffle
-                    Baf = ones(size(E));
-            end
-            E = E.*Baf;
+                E = HexagonalPistonElement(a,lambda,Psi,Theta,epsi(i),etheta(i),baffle,rotate);
         end
     end
     D = D + ew(i)*E.*exp(1i*2*pi*fx*ex(i)).*exp(1i*2*pi*fy*ey(i)).*exp(1i*2*pi*fz*ez(i));
