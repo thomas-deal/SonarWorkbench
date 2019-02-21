@@ -1,16 +1,24 @@
-function E = HexagonalPistonElement(a,lambda,psi,theta,varargin)
-%% function E = HexagonalPistonElement(a,lambda,psi,theta)
-% function E = HexagonalPistonElement(a,lambda,psi,theta,psir,thetar)
-% function E = HexagonalPistonElement(a,lambda,psi,theta,psir,thetar,baffle)
-% function E = HexagonalPistonElement(a,lambda,psi,theta,psir,thetar,baffle,rotate)
+function E = HexagonalPistonElement(Element,lambda,psi,theta,varargin)
+%% function E = HexagonalPistonElement(Element,lambda,psi,theta)
+% function E = HexagonalPistonElement(Element,lambda,psi,theta,psir,thetar)
 %
-% Calculates the 2D element pattern for an ideal hexagonal plane piston
+% Calculates the element pattern for an ideal hexagonal plane piston
 % with inscribed circle radius a at wavelength lambda over azimuthal angles
 % psi and elevation angles theta. Default orientation has left and right
 % sides parallel. Element can be rotated 90 degrees such that top and
-% bottom sides are parallel using optional argument
+% bottom sides are parallel using optional argument.
 %
 % Inputs:
+%           Element - Element structure with the following fields
+%               .type   - Element type string
+%               .baffle - Element baffle enumeration
+%                         0 = No baffle
+%                         1 = Hard baffle
+%                         2 = Raised cosine baffle
+%               .a      - Hexagonal element inscribed circle radius, m
+%               .rotate - Hexagonal element rotation enumeration
+%                         0 = Two sides parallel to z axis
+%                         1 = Two sides parallel to y axis
 %           a       - Element inscribed circle radius, m
 %           lambda  - Acoustic wavelength, 1/m
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -19,11 +27,6 @@ function E = HexagonalPistonElement(a,lambda,psi,theta,varargin)
 % Optional Inputs:
 %           psir    - Azimuthal rotation angle, deg
 %           thetar  - Elevation rotationangle, deg
-%           baffle  - Element baffle enumeration
-%                     0 = No baffle
-%                     1 = Hard baffle
-%                     2 = Raised cosine baffle
-%           rotate  - Rotate element 90 degrees from vertical
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -39,12 +42,12 @@ if min(thetaSize)==1
     if min(psiSize)==1
         resize = 1;
     else
-        disp('CircularPistonElement: Inputs psi and theta have incompatible dimensions')
+        disp('HexagonalPistonElement: Inputs psi and theta have incompatible dimensions')
         return
     end
 else
     if min(psiSize)==1
-        disp('CircularPistonElement: Inputs psi and theta have incompatible dimensions')
+        disp('HexagonalPistonElement: Inputs psi and theta have incompatible dimensions')
         return
     end
 end
@@ -55,40 +58,33 @@ else
     Psi = psi;
 end
 %% Check Input Arguments
+a = lambda/4;
+rotate = 0;
+baffle = 0;
 psir = 0;
 thetar = 0;
-baffle = 0;
-switch nargin
-    case 6
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-    case 7
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-        if ~isempty(varargin{3})
-            baffle = varargin{3};
-        end
-    case 8
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-        if ~isempty(varargin{3})
-            baffle = varargin{3};
-        end
-        if ~isempty(varargin{4})
-            rotate = varargin{4};
-        end
+if nargin==6
+    if ~isempty(varargin{1})
+        psir = varargin{1};
+    end
+    if ~isempty(varargin{2})
+        thetar = varargin{2};
+    end
+end
+if isfield(Element,'a')
+    if ~isempty(Element.a)
+        a = Element.a;
+    end
+end
+if isfield(Element,'rotate')
+    if ~isempty(Element.rotate)
+        rotate = Element.rotate;
+    end
+end
+if isfield(Element,'baffle')
+    if ~isempty(Element.baffle)
+        baffle = Element.baffle;
+    end
 end
 %% Rotate Computational Grid
 X = cosd(thetar)*cosd(Theta).*cosd(Psi-psir) + sind(thetar)*sind(Theta);
@@ -104,11 +100,8 @@ else
     fy = cosd(-Theta).*sind(Psi)/lambda;
     fz = sind(-Theta)/lambda;
 end
-%% Prevent Divide by 0
-fy(fy==0) = eps;
-fz(fz==0) = eps;
 %% Element Face Subset Patterns
-e0 = eps;
+e0 = 1e-3;
 % Lower Triangle
 E1 = 2*exp(-1i*4*pi*a/sqrt(3)*fz)/((2*pi)^2*sqrt(3)).*(fy + exp(1i*2*pi*a/sqrt(3)*fz).*(-fy.*cos(2*pi*a*fy) + 1i/sqrt(3)*fz.*sin(2*pi*a*fy)))./(fy.^3-1/3*fy.*fz.^2);
 i0 = find((abs(fy-fz/sqrt(3))<e0)|(abs(fy+fz/sqrt(3))<e0));
@@ -120,21 +113,11 @@ E1((abs(fy)<e0)&(abs(fz)<e0)) = a^2/sqrt(3);    % Area of Triangle
 E2 = 4/sqrt(3)*a^2*sinc(fy*2*a).*sinc(fz*2/sqrt(3)*a);
 % Upper Triangle
 E3 = conj(E1);
-%% Combine
+%% Combine and Normalize
 E = E1 + E2 + E3;
 E = E/(2*sqrt(3)*a^2);                          % Area of Hexagon
 %% Baffle Pattern
 if baffle>0
-    Phi = acosd(cosd(Psi).*cosd(Theta));
-    if baffle==1        % Hard baffle
-        Baf = ones(size(E));
-        Baf(Phi>90) = eps;
-    elseif baffle==2    % Raised cosine baffle
-        Baf = 1/2+1/2*cosd(4*Phi);
-        Baf(Phi<=90) = 1;
-        Baf(Phi>135) = eps;
-    else                % Invalid input for baffle
-        Baf = ones(size(E));
-    end
+    Baf = ComputeBaffle(baffle,Psi,Theta);
     E = E.*Baf;
 end

@@ -1,26 +1,27 @@
-function E = RectangularPistonElement(w,h,lambda,psi,theta,varargin)
-%% function E = RectangularPistonElement(w,h,lambda,psi,theta)
-% function E = RectangularPistonElement(w,h,lambda,psi,theta,psir,thetar)
-% function E = RectangularPistonElement(w,h,lambda,psi,theta,psir,thetar,baffle)
+function E = RectangularPistonElement(Element,lambda,psi,theta,varargin)
+%% function E = RectangularPistonElement(Element,lambda,psi,theta)
+% function E = RectangularPistonElement(Element,lambda,psi,theta,psir,thetar)
 %
-% Calculates the 2D element pattern for an ideal rectangular plane piston
+% Calculates the element pattern for an ideal rectangular plane piston
 % of width w and height h at wavelength lambda over azimuthal angles psi
 % and elevation angles theta.
 %
 % Inputs:
-%           w       - Piston width, m
-%           h       - Piston height, m
+%           Element - Element structure with the following fields
+%               .type   - Element type string
+%               .baffle - Element baffle enumeration
+%                         0 = No baffle
+%                         1 = Hard baffle
+%                         2 = Raised cosine baffle
+%               .w      - Rectangular piston width, m
+%               .h      - Rectangular piston height, m
 %           lambda  - Acoustic wavelength, 1/m
-%           psi     - Azimuthal angle vector, deg
-%           theta   - Elevation angle vector, deg
+%           psi     - Azimuthal angle vector or matrix, deg
+%           theta   - Elevation angle vector or matrix, deg
 %
 % Optional Inputs:
 %           psir    - Azimuthal rotation angle, deg
 %           thetar  - Elevation rotationangle, deg
-%           baffle  - Element baffle enumeration
-%                     0 = No baffle
-%                     1 = Hard baffle
-%                     2 = Raised cosine baffle
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -36,12 +37,12 @@ if min(thetaSize)==1
     if min(psiSize)==1
         resize = 1;
     else
-        disp('CircularPistonElement: Inputs psi and theta have incompatible dimensions')
+        disp('RectangularPistonElement: Inputs psi and theta have incompatible dimensions')
         return
     end
 else
     if min(psiSize)==1
-        disp('CircularPistonElement: Inputs psi and theta have incompatible dimensions')
+        disp('RectangularPistonElement: Inputs psi and theta have incompatible dimensions')
         return
     end
 end
@@ -52,27 +53,33 @@ else
     Psi = psi;
 end
 %% Check Input Arguments
+w = lambda/2;
+h = lambda/2;
+baffle = 0;
 psir = 0;
 thetar = 0;
-baffle = 0;
-switch nargin
-    case 7
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-    case 8
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-        if ~isempty(varargin{3})
-            baffle = varargin{3};
-        end
+if nargin==6
+    if ~isempty(varargin{1})
+        psir = varargin{1};
+    end
+    if ~isempty(varargin{2})
+        thetar = varargin{2};
+    end
+end
+if isfield(Element,'w')
+    if ~isempty(Element.w)
+        w = Element.w;
+    end
+end
+if isfield(Element,'h')
+    if ~isempty(Element.h)
+        h = Element.h;
+    end
+end
+if isfield(Element,'baffle')
+    if ~isempty(Element.baffle)
+        baffle = Element.baffle;
+    end
 end
 %% Rotate Computational Grid
 X = cosd(thetar)*cosd(Theta).*cosd(Psi-psir) + sind(thetar)*sind(Theta);
@@ -87,16 +94,6 @@ fz = sind(-Theta)/lambda;
 E = sinc(fy*w).*sinc(fz*h);
 %% Baffle Pattern
 if baffle>0
-    Phi = acosd(cosd(Psi).*cosd(Theta));
-    if baffle==1        % Hard baffle
-        Baf = ones(size(E));
-        Baf(Phi>90) = eps;
-    elseif baffle==2    % Raised cosine baffle
-        Baf = 1/2+1/2*cosd(4*Phi);
-        Baf(Phi<=90) = 1;
-        Baf(Phi>135) = eps;
-    else                % Invalid input for baffle
-        Baf = ones(size(E));
-    end
+    Baf = ComputeBaffle(baffle,Psi,Theta);
     E = E.*Baf;
 end

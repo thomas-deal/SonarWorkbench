@@ -1,14 +1,19 @@
-function E = CircularPistonElement(a,lambda,psi,theta,varargin)
-%% function E = CircularPistonElement(a,lambda,psi,theta)
-% function E = CircularPistonElement(a,lambda,psi,theta,psir,thetar)
-% function E = CircularPistonElement(a,lambda,psi,theta,psir,thetar,baffle)
+function E = CircularPistonElement(Element,lambda,psi,theta,varargin)
+%% function E = CircularPistonElement(Element,lambda,psi,theta)
+% function E = CircularPistonElement(Element,lambda,psi,theta,psir,thetar)
 %
-% Calculates the 2D element pattern for an ideal circular plane piston of
+% Calculates the element pattern for an ideal circular plane piston of
 % radius a at wavelength lambda over azimuthal angles psi and elevation
 % angles theta.
 %
 % Inputs:
-%           a       - Piston radius, m
+%           Element - Element structure with the following fields
+%               .type   - Element type string
+%               .baffle - Element baffle enumeration
+%                         0 = No baffle
+%                         1 = Hard baffle
+%                         2 = Raised cosine baffle
+%               .a      - Circular piston radius, m
 %           lambda  - Acoustic wavelength, 1/m
 %           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
@@ -16,10 +21,6 @@ function E = CircularPistonElement(a,lambda,psi,theta,varargin)
 % Optional Inputs:
 %           psir    - Azimuthal rotation angle, deg
 %           thetar  - Elevation rotationangle, deg
-%           baffle  - Element baffle enumeration
-%                     0 = No baffle
-%                     1 = Hard baffle
-%                     2 = Raised cosine baffle
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -51,27 +52,27 @@ else
     Psi = psi;
 end
 %% Check Input Arguments
+a = lambda/4;
+baffle = 0;
 psir = 0;
 thetar = 0;
-baffle = 0;
-switch nargin
-    case 6
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-    case 7
-        if ~isempty(varargin{1})
-            psir = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            thetar = varargin{2};
-        end
-        if ~isempty(varargin{3})
-            baffle = varargin{3};
-        end
+if nargin==6
+    if ~isempty(varargin{1})
+        psir = varargin{1};
+    end
+    if ~isempty(varargin{2})
+        thetar = varargin{2};
+    end
+end
+if isfield(Element,'a')
+    if ~isempty(Element.a)
+        a = Element.a;
+    end
+end
+if isfield(Element,'baffle')
+    if ~isempty(Element.baffle)
+        baffle = Element.baffle;
+    end
 end
 %% Rotate Computational Grid
 X = cosd(thetar)*cosd(Theta).*cosd(Psi-psir) + sind(thetar)*sind(Theta);
@@ -88,16 +89,6 @@ E = besselj(1,2*pi*fr*a)./(pi*fr*a);
 E(fr==0) = 1;
 %% Baffle Pattern
 if baffle>0
-    Phi = acosd(cosd(Psi).*cosd(Theta));
-    if baffle==1        % Hard baffle
-        Baf = ones(size(E));
-        Baf(Phi>90) = eps;
-    elseif baffle==2    % Raised cosine baffle
-        Baf = 1/2+1/2*cosd(4*Phi);
-        Baf(Phi<=90) = 1;
-        Baf(Phi>135) = eps;
-    else                % Invalid input for baffle
-        Baf = ones(size(E));
-    end
+    Baf = ComputeBaffle(baffle,Psi,Theta);
     E = E.*Baf;
 end
