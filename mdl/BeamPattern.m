@@ -1,5 +1,5 @@
-function D = BeamPattern(Array,Element,lambda,psi,theta)
-%% function D = BeamPattern(Array,Element,lambda,psi,theta)
+function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
+%% function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
 %
 % Computes the beam pattern for an array of identical elements at
 % coordinates (ex,ey,ez) rotated (epsi,etheta) from the x axis with complex
@@ -10,15 +10,17 @@ function D = BeamPattern(Array,Element,lambda,psi,theta)
 % assume half wavelength dimensions for all elements.
 %
 % Inputs:
-%           Array   - Array structure with the following fields
+%           Array   - Array structure with the following required fields
 %               .ex     - Element x position vector, m
 %               .ey     - Element y position vector, m
 %               .ez     - Element z position vector, m
 %               .epsi   - Element normal azimuth vector, deg
 %               .etheta - Element normal elevation vector, deg
-%               .ew     - Complex element weight vector
 %           Element - Element structure with the following fields
-%               .type   - Element type string
+%               [required]
+%               .type   - Element pattern generator string
+%                         (name of .m file)
+%               [optional]
 %               .baffle - Element baffle enumeration
 %                         0 = No baffle
 %                         1 = Hard baffle
@@ -32,17 +34,19 @@ function D = BeamPattern(Array,Element,lambda,psi,theta)
 %               .a      - Hexagonal element inscribed circle radius, m
 %               .rotate - Hexagonal element rotation, see 
 %                         HexagonalPistonElement.m for details
+%           Beam        - Beam structure with the following required fields
+%               .ew     - Complex element weight vector
 %           lambda  - Acoustic wavelength, m
 %           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
 % 
 %
 % Outputs:
-%           D       - Beam pattern, complex linear units
+%           BP      - Beam pattern, complex linear units
 %
 
 %% Initialize
-D = 1;
+BP = 1;
 %% Check Input Dimensions
 resize = 0;
 thetaSize = size(theta);
@@ -73,7 +77,7 @@ fz = sind(-Theta)/lambda;
 %% Compute Beam Pattern
 psilast = NaN;
 thetalast = NaN;
-D = zeros(size(Psi));
+BP = zeros(size(Psi));
 hwait = waitbar(0,'Processing');
 set(hwait,'Name','BeamPattern')
 for i=1:Array.Ne
@@ -81,23 +85,15 @@ for i=1:Array.Ne
     if(Array.epsi(i)~=psilast)||(Array.etheta(i)~=thetalast)
         psilast = Array.epsi(i);
         thetalast = Array.etheta(i);
-        switch Element.type
-            case 'Omnidirectional'     
-                E = OmnidirectionalElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
-            case 'Linear'
-                E = LinearElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
-            case 'CircularPiston'
-                E = CircularPistonElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
-            case 'RectangularPiston'
-                E = RectangularPistonElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
-            case 'HexagonalPiston'
-                E = HexagonalPistonElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
-            otherwise     
-                E = OmnidirectionalElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
+        try
+            eval(['E = ' Element.type '(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));']);
+        catch me %#ok<NASGU>
+            disp(['Element pattern generator ' Element.type '.m does not exist. Using omnidirectional element instead.'])     
+            E = OmnidirectionalElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
         end
     end
-    D = D + Array.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));
+    BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));
 end
 close(hwait)
 %% Normalize
-D = D/sum(abs(Array.ew));
+BP = BP/sum(abs(Beam.ew));
