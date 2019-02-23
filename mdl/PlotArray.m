@@ -47,6 +47,9 @@ else
 end
 hold on
 R = 1.5*max(sqrt(Array.ex.^2+Array.ey.^2+Array.ez.^2));
+if R==0 % Single-element array
+    R = 5*max(sqrt(Element.shapex.^2+Element.shapey.^2+Element.shapez.^2));
+end
 plot3([0 1],[0 0],[0 0],'k')
 text(1.1,0,0,'x','horizontalalignment','center','verticalalignment','middle')
 plot3([0 0],[0 1],[0 0],'k')
