@@ -14,8 +14,9 @@ function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
 %               .ex     - Element x position vector, m
 %               .ey     - Element y position vector, m
 %               .ez     - Element z position vector, m
-%               .epsi   - Element normal azimuth vector, deg
+%               .egamma - Element normal azimuth vector, deg
 %               .etheta - Element normal elevation vector, deg
+%               .epsi   - Element normal azimuth vector, deg
 %           Element - Element structure with the following fields
 %               [required]
 %               .type   - Element pattern generator string
@@ -32,8 +33,6 @@ function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
 %               .w      - Rectangular piston width, m
 %               .h      - Rectangular piston height, m
 %               .a      - Hexagonal element inscribed circle radius, m
-%               .rotate - Hexagonal element rotation, see 
-%                         HexagonalPistonElement.m for details
 %           Beam        - Beam structure with the following required fields
 %               .ew     - Complex element weight vector
 %           lambda  - Acoustic wavelength, m
@@ -71,9 +70,9 @@ else
     Psi = psi;
 end
 %% Spatial Grid
-fx = cosd(-Theta).*cosd(Psi)/lambda;
-fy = cosd(-Theta).*sind(Psi)/lambda;
-fz = sind(-Theta)/lambda;
+fx = cosd(Theta).*cosd(Psi)/lambda;
+fy = cosd(Theta).*sind(Psi)/lambda;
+fz = sind(Theta)/lambda;
 %% Compute Beam Pattern
 psilast = NaN;
 thetalast = NaN;
@@ -86,10 +85,10 @@ for i=1:Array.Ne
         psilast = Array.epsi(i);
         thetalast = Array.etheta(i);
         try
-            eval(['E = ' Element.type '(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));']);
+            eval(['E = ' Element.type '(Element,lambda,Psi,Theta,Array.egamma(i),Array.etheta(i),Array.epsi(i));']);
         catch me %#ok<NASGU>
             disp(['Element pattern generator ' Element.type '.m does not exist. Using omnidirectional element instead.'])     
-            E = OmnidirectionalElement(Element,lambda,Psi,Theta,Array.epsi(i),Array.etheta(i));
+            E = OmnidirectionalElement(Element,lambda,Psi,Theta,Array.egamma(i),Array.etheta(i),Array.epsi(i));
         end
     end
     BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));

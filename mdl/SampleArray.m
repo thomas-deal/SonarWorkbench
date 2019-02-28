@@ -22,5 +22,9 @@ Array.ey = repmat((-(Nw-1)/2:(Nw-1)/2)'*dy,Nh,1);
                                     % Element y positions, m
 Array.ez = reshape(repmat((-(Nh-1)/2:(Nh-1)/2)*dz,Nw,1),Array.Ne,1);   
                                     % Element z positions, m
-Array.epsi = zeros(Array.Ne,1);     % Element azimuths, deg
+Array.egamma = zeros(Array.Ne,1);   % Element rolls, deg
 Array.etheta = zeros(Array.Ne,1);   % Element elevations, deg
+Array.epsi = zeros(Array.Ne,1);     % Element azimuths, deg
+Array.ax = 0;                       % Array x position, m
+Array.ay = 0;                       % Array y position, m
+Array.az = 0;                       % Array z position, m

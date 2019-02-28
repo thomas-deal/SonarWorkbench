@@ -1,6 +1,6 @@
 function E = OmnidirectionalElement(Element,lambda,psi,theta,varargin) %#ok<INUSL>
 %% function E = OmnidirectionalElement(Element,lambda,psi,theta)
-% function E = OmnidirectionalElement(Element,lambda,psi,theta,lambda,psir,thetar)
+% function E = OmnidirectionalElement(Element,lambda,psi,theta,lambda,gammar,thetar,psir)
 %
 % Calculates the element pattern for an omnidirectional sensor over 
 % azimuthal angles psi and elevation angles theta.
@@ -12,13 +12,14 @@ function E = OmnidirectionalElement(Element,lambda,psi,theta,varargin) %#ok<INUS
 %                         0 = no baffle
 %                         1 = hard baffle
 %                         2 = raised cosine baffle
-%           lambda  - Acoustic wavelength, 1/m (unused)
+%           lambda  - Acoustic wavelength, m (unused)
 %           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
 %
 % Optional Inputs:
-%           psir    - Azimuthal rotation angle, deg
+%           gammar  - Roll rotation angle, deg
 %           thetar  - Elevation rotation angle, deg
+%           psir    - Azimuthal rotation angle, deg
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -49,14 +50,18 @@ else
 end
 %% Check Input Arguments
 baffle = 0;
-psir = 0;
+gammar = 0;
 thetar = 0;
-if nargin==6
+psir = 0;
+if nargin==7
     if ~isempty(varargin{1})
-        psir = varargin{1};
+        gammar = varargin{1};
     end
     if ~isempty(varargin{2})
         thetar = varargin{2};
+    end
+    if ~isempty(varargin{3})
+        psir = varargin{3};
     end
 end
 if isfield(Element,'baffle')
@@ -65,10 +70,14 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-X = cosd(thetar)*cosd(Theta).*cosd(Psi-psir) + sind(thetar)*sind(Theta);
-Y = cosd(Theta).*sind(Psi-psir);
-Z = sind(thetar)*cosd(Theta).*cosd(Psi-psir) - cosd(thetar)*sind(Theta);
-Theta = -asind(Z);
+X0 = cosd(Theta).*cosd(Psi);
+Y0 = cosd(Theta).*sind(Psi);
+Z0 = sind(Theta);
+ROT = RotationMatrix(gammar,thetar,psir)';
+X = ROT(1,1)*X0 + ROT(1,2)*Y0 + ROT(1,3)*Z0;
+Y = ROT(2,1)*X0 + ROT(2,2)*Y0 + ROT(2,3)*Z0;
+Z = ROT(3,1)*X0 + ROT(3,2)*Y0 + ROT(3,3)*Z0;
+Theta = asind(Z);
 Psi = atan2d(Y,X);
 %% Calculate Element Pattern
 E = ones(size(Theta));
