@@ -70,9 +70,9 @@ else
     Psi = psi;
 end
 %% Spatial Grid
-fx = cosd(Theta).*cosd(Psi)/lambda;
-fy = cosd(Theta).*sind(Psi)/lambda;
-fz = sind(Theta)/lambda;
+fx = cosd(-Theta).*cosd(Psi)/lambda;
+fy = cosd(-Theta).*sind(Psi)/lambda;
+fz = sind(-Theta)/lambda;
 %% Compute Beam Pattern
 psilast = NaN;
 thetalast = NaN;

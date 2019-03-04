@@ -79,9 +79,9 @@ BPdB(BPdB<dBScale(1)) = dBScale(1);
 BPdB(BPdB>dBScale(2)) = dBScale(2);
 BPdB = BPdB - dBScale(1);
 %% Convert Polar to Cartesian
-ux = cosd(Theta).*cosd(Psi);
-uy = cosd(Theta).*sind(Psi);
-uz = sind(Theta);
+ux = cosd(-Theta).*cosd(Psi);
+uy = cosd(-Theta).*sind(Psi);
+uz = sind(-Theta);
 BPX = BPdB/diff(dBScale).*ux;
 BPY = BPdB/diff(dBScale).*uy;
 BPZ = BPdB/diff(dBScale).*uz;

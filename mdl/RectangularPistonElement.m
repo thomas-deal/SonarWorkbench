@@ -87,18 +87,18 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-X0 = cosd(Theta).*cosd(Psi);
-Y0 = cosd(Theta).*sind(Psi);
-Z0 = sind(Theta);
+X0 = cosd(-Theta).*cosd(Psi);
+Y0 = cosd(-Theta).*sind(Psi);
+Z0 = sind(-Theta);
 ROT = RotationMatrix(gammar,thetar,psir)';
 X = ROT(1,1)*X0 + ROT(1,2)*Y0 + ROT(1,3)*Z0;
 Y = ROT(2,1)*X0 + ROT(2,2)*Y0 + ROT(2,3)*Z0;
 Z = ROT(3,1)*X0 + ROT(3,2)*Y0 + ROT(3,3)*Z0;
-Theta = asind(Z);
+Theta = -asind(Z);
 Psi = atan2d(Y,X);
 %% Spatial Grid
-fy = cosd(Theta).*sind(Psi)/lambda;
-fz = sind(Theta)/lambda;
+fy = cosd(-Theta).*sind(Psi)/lambda;
+fz = sind(-Theta)/lambda;
 %% Calculate Element Pattern
 E = sinc(fy*w).*sinc(fz*h);
 %% Baffle Pattern
