@@ -104,6 +104,7 @@ colorbar('location','southoutside','orientation','horizontal')
 axis equal
 axis off
 colormap jet
+caxis(dBScale)
 set(gca,'zdir','reverse','ydir','reverse')
 view([60 15])
         

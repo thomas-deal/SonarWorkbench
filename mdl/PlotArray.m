@@ -10,6 +10,7 @@ function PlotArray(Array,Element,varargin)
 % Inputs:
 %           Array   - Array structure with the following fields
 %               [required]
+%			.Ne	  - Number of elements
 %               .ex     - Element x position vector, m
 %               .ey     - Element y position vector, m
 %               .ez     - Element z position vector, m
@@ -20,7 +21,9 @@ function PlotArray(Array,Element,varargin)
 %               .ax     - Array x position, m
 %               .ay     - Array y position, m
 %               .az     - Array z position, m
-%           Element - Element structure with the following required fields
+%			.eindex - Vector of indices into element structure vector
+%				     to support non-uniform element arrays
+%           Element - Element structure vector with the following required fields
 %               .shapex - Element shape x coordinates, m
 %               .shapey - Element shape y coordinates, m
 %               .shapez - Element shape z coordinates, m
@@ -66,6 +69,20 @@ end
 if isfield(Array,'az')
     az = Array.az;
 end
+%% Support for Non-Uniform Arrays
+eindex = 1;
+if isfield(Array,'eindex')
+	if ~isempty(Array.eindex)
+		eindex = Array.eindex;
+	end
+end
+if length(eindex)==1
+	eindex = eindex*ones(Array.Ne,1);
+end
+if max(eindex) > length(Element)
+	disp('PlotArray: Not enough elements defined for non-uniform array, reverting to uniform array of type Element(1)')
+	eindex = ones(Array.Ne,1);
+end
 %% Plot Array
 if ~isempty(hax)
     axes(hax)
@@ -77,8 +94,10 @@ if actualsize
     R = 1;
 else
     R = 1.5*max(sqrt(Array.ex.^2+Array.ey.^2+Array.ez.^2));
-    if R==0 % Single-element array
-        R = 5*max(sqrt(Element.shapex.^2+Element.shapey.^2+Element.shapez.^2));
+    if R==0 % Single-element or co-located elements
+		for i=1:Array.Ne
+			R = max(R,max(sqrt(Element(eindex(i)).shapex.^2+Element(eindex(i)).shapey.^2+Element(eindex(i)).shapez.^2)));
+		end
     end
 end
 plot3(ax+[0 1],ay+[0 0],az+[0 0],'k')
@@ -90,9 +109,9 @@ text(ax+0,ay+0,az+1.1,'z','horizontalalignment','center','verticalalignment','mi
 for i=1:Array.Ne
     % Rotate Element Shape
     ROT = RotationMatrix(Array.egamma(i),Array.etheta(i),Array.epsi(i));
-    shapex = ROT(1,1)*Element.shapex + ROT(1,2)*Element.shapey + ROT(1,3)*Element.shapez;
-    shapey = ROT(2,1)*Element.shapex + ROT(2,2)*Element.shapey + ROT(2,3)*Element.shapez;
-    shapez = ROT(3,1)*Element.shapex + ROT(3,2)*Element.shapey + ROT(3,3)*Element.shapez;
+    shapex = ROT(1,1)*Element(eindex(i)).shapex + ROT(1,2)*Element(eindex(i)).shapey + ROT(1,3)*Element(eindex(i)).shapez;
+    shapey = ROT(2,1)*Element(eindex(i)).shapex + ROT(2,2)*Element(eindex(i)).shapey + ROT(2,3)*Element(eindex(i)).shapez;
+    shapez = ROT(3,1)*Element(eindex(i)).shapex + ROT(3,2)*Element(eindex(i)).shapey + ROT(3,3)*Element(eindex(i)).shapez;
     % Plot Element with Amplitude Weight and Element Number
     patch(ax+Array.ex(i)/R+shapex/R,ay+Array.ey(i)/R+shapey/R,az+Array.ez(i)/R+shapez/R,[0.5 0.5 1],'FaceVertexCData',repmat([0.5 0.5 1],length(shapex),1),'FaceAlpha',abs(ew(i)))    
     plot3(ax+Array.ex(i)/R+shapex/R,ay+Array.ey(i)/R+shapey/R,az+Array.ez(i)/R+shapez/R,'k')
