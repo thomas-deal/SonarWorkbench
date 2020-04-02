@@ -1,5 +1,8 @@
 clearvars -except ea psi0 theta0
 close all
+%% Setup Path
+path(pathdef)
+addpath(fullfile('..','mdl'))
 %% Define Elements
 Element(1).type = 'OmnidirectionalElement';
 Element(1).baffle = 0;
