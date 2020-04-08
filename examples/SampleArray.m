@@ -8,9 +8,7 @@ Element.w = lambda/2;               % Element face width, m
 Element.h = lambda/4;               % Element face height, m
 Element.baffle = 1;                 % Hard Baffle
 %% Element Shape
-Element.shapex = zeros(1,5);
-Element.shapey = Element.w/2*[-1 1 1 -1 -1];
-Element.shapez = Element.h/2*[-1 -1 1 1 -1];
+Element = AddElementShape(Element);
 %% Array Design
 Nw = 5;                             % Number of elements wide
 Nh = 10;                            % Number of elements high
