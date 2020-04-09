@@ -36,6 +36,8 @@ if ~isfield(Element,'type')
 end
 %% Generate Shape
 switch Element.type
+    case 'OmnidirectionalElement'
+        % Use default
     case 'LinearElement'
         if ~isfield(Element,'axis')
             disp('Linear element aligned axis not defined in Element.axis. Aligning element with z axis.')
@@ -55,6 +57,8 @@ switch Element.type
                 Element.shapey = [0 0];
                 Element.shapez = Element.L/2*[-1 1];
         end
+    case 'CosineElement'
+        % Use default
     case 'CircularPistonElement'
         if ~isfield(Element,'a')
             disp('Circular piston element radius not defined in Element.a. Using default radius 1 cm.')
@@ -70,7 +74,7 @@ switch Element.type
                 Element.w = 0.01;
                 Element.h = 0.01;
             else
-                disp(['Rectangular piston element width not defined in Element.w. Using element height ' Element.h*100 ' cm.'])
+                disp(['Rectangular piston element width not defined in Element.w. Using element height ' num2str(Element.h*100) ' cm.'])
                 Element.w = Element.h;
             end
         end
@@ -80,13 +84,37 @@ switch Element.type
                 Element.w = 0.01;
                 Element.h = 0.01;
             else
-                disp(['Rectangular piston element height not defined in Element.h. Using element width ' Element.w*100 ' cm.'])
+                disp(['Rectangular piston element height not defined in Element.h. Using element width ' num2str(Element.w*100) ' cm.'])
                 Element.h = Element.w;
             end
         end    
         Element.shapex = zeros(1,5);
         Element.shapey = Element.w/2*[-1 1 1 -1 -1];
         Element.shapez = Element.h/2*[-1 -1 1 1 -1];
+    case 'AnnularPistonElement'
+        if ~isfield(Element,'a')
+            if ~isfield(Element,'b')
+                disp('Annular piston element outer and inner radii not defined in Element.a and Element.b. Using default radii 1 cm and 0.75 cm.')
+                Element.a = 0.01;
+                Element.b = 0.0075;
+            else
+                disp(['Annular piston element outer radius not defined in Element.a. Using default outer radius 4/3*inner radius = ' num2str(4/3*Element.b*100) ' cm.'])
+                Element.a = 4/3*Element.b;
+            end
+        end
+        if ~isfield(Element,'b')
+            if ~isfield(Element,'a')
+                disp('Annular piston element outer and inner radii not defined in Element.a and Element.b. Using default radii 1 cm and 0.75 cm.')
+                Element.a = 0.01;
+                Element.b = 0.0075;
+            else
+                disp(['Annular piston element inner radius not defined in Element.b. Using default inner radius 3/4*outer radius = ' num2str(3/4*Element.a*100) ' cm.'])
+                Element.b = 3/4*Element.a;
+            end
+        end
+        Element.shapex = zeros(1,2*361+1);
+        Element.shapey = [Element.a*sind(0:360) Element.b*sind(360:-1:0) Element.a*sind(0)];
+        Element.shapez = [Element.a*cosd(0:360) Element.b*cosd(360:-1:0) Element.a*cosd(0)];
     case 'HexagonalPistonElement'
         if ~isfield(Element,'a')
             disp('Hexagonal piston element inscribed circle radius not defined in Element.a. Using default radius 1 cm.')

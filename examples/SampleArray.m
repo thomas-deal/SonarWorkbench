@@ -1,14 +1,3 @@
-%% Design Parameters
-f0 = 37.5e3;                        % Design frequency, Hz
-c0 = 1500;                          % Sound speed, m/s
-lambda = c0/f0;                     % Acoustic wavelength, m
-%% Element Design
-Element.type = 'RectangularPistonElement';
-Element.w = lambda/2;               % Element face width, m
-Element.h = lambda/4;               % Element face height, m
-Element.baffle = 1;                 % Hard Baffle
-%% Element Shape
-Element = AddElementShape(Element);
 %% Array Design
 Nw = 5;                             % Number of elements wide
 Nh = 10;                            % Number of elements high
