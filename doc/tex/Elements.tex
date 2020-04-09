@@ -68,7 +68,11 @@ Sonar Workbench uses the acoustic wavelength, $\lambda$, to calculate element pa
 \lambda = \frac{c}{f} = \frac{2\pi{c}}{\omega} = \frac{2\pi}{k}.
 \end{equation*}
 
-At its most general, the element pattern is the three-dimensional Fourier transform of the element's complex aperture function, $A(\lambda,x,y,z)$. For the piston elements, the element pattern reduces to a two-dimensional Fourier transform, since the element face lies in the $y$-$z$ plane,
+At its most general, the element pattern is the three-dimensional Fourier transform of the element's complex aperture function, $A(\lambda,x,y,z)$,
+\begin{equation}
+E(\lambda,\theta,\psi) = \int_{-\infty}^\infty\int_{-\infty}^\infty\int_{-\infty}^\infty A(\lambda,x,y,z)e^{j2\pi\left(\frac{\cos\theta\cos\psi}{\lambda}x + \frac{\cos\theta\sin\psi}{\lambda}y + \frac{\sin\theta}{\lambda}z\right)}dxdydz,\label{eq:VolumetricFT}
+\end{equation}
+For the piston elements, the element pattern reduces to a two-dimensional Fourier transform, since the element face lies in the $y$-$z$ plane,
 \begin{equation}
 E_{piston}(\lambda,\theta,\psi) = \int_{-\infty}^\infty\int_{-\infty}^\infty A(\lambda,y,z)e^{j2\pi\left(\frac{\cos\theta\sin\psi}{\lambda}y + \frac{\sin\theta}{\lambda}z\right)}dydz,\label{eq:PlanarFT}
 \end{equation}
