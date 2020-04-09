@@ -1,7 +1,4 @@
-clear
-close all
 %% Setup Path
-path(pathdef)
 addpath(fullfile('..','..','mdl'))
 %% Plot Settings
 pos = [0 0 1400 800];
