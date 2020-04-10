@@ -1,18 +1,17 @@
-function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
-%% function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
+function BP = BeamPattern(Array,Element,Beam,lambda,theta,psi)
+%% function BP = BeamPattern(Array,Element,Beam,lambda,theta,psi)
 %
 % Computes the beam pattern for an array of elements at coordinates
-% (ex,ey,ez) rotated (epsi,etheta) from the x axis with complex element
-% weights ew at wavelength lambda over azimuthal angles psi and elevation
-% angles theta. Supported element types are omnidirectional,
-% linear, circular piston, rectangular piston, hexagonal piston, and annular
-% piston. When element parameters are not specified, default values are
-% used which assume half wavelength dimensions for all elements.
+% (ex,ey,ez) rotated (egamma,etheta,epsi) from the x axis with complex 
+% element weights ew at wavelength lambda over elevation angles theta and
+% azimuthal angles psi. Supported element types are omnidirectional, 
+% linear, cosine, circular piston, rectangular piston, annular piston, and 
+% hexagonal piston.
 %
 % Inputs:
-%           Array   - Array structure with the following fields
+%           Array       - Array structure with the following fields
 %			[required]
-%			.Ne	  - Number of elements
+%               .Ne     - Number of elements
 %               .ex     - Element x position vector, m
 %               .ey     - Element y position vector, m
 %               .ez     - Element z position vector, m
@@ -20,9 +19,9 @@ function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
 %               .etheta - Element normal elevation vector, deg
 %               .epsi   - Element normal azimuth vector, deg
 %			[optional]
-%			.eindex - Vector of indices into element structure vector
-%				     to support non-uniform element arrays
-%           Element - Element structure with the following fields
+%               .eindex - Vector of indices into element structure vector
+%                         to support non-uniform element arrays
+%           Element     - Element structure with the following fields
 %               [required]
 %               .type   - Element pattern generator string
 %                         (name of .m file)
@@ -37,18 +36,17 @@ function BP = BeamPattern(Array,Element,Beam,lambda,psi,theta)
 %               .a      - Circular piston radius, m
 %               .w      - Rectangular piston width, m
 %               .h      - Rectangular piston height, m
-%               .a      - Hexagonal element inscribed circle radius, m
-%			.a 	  - Annular element outer radius, m
-%			.b      - Annular element inner radius, m
+%               .a      - Annular piston outer radius, m
+%               .b      - Annular piston inner radius, m
+%               .a      - Hexagonal piston inscribed circle radius, m
 %           Beam        - Beam structure with the following required fields
 %               .ew     - Complex element weight vector
-%           lambda  - Acoustic wavelength, m
-%           psi     - Azimuthal angle vector or matrix, deg
-%           theta   - Elevation angle vector or matrix, deg
-% 
+%           lambda      - Acoustic wavelength, m
+%           theta       - Elevation angle vector or matrix, deg
+%           psi         - Azimuthal angle vector or matrix, deg
 %
 % Outputs:
-%           BP      - Beam pattern, complex linear units
+%           BP          - Beam pattern, complex linear units
 %
 
 %% Initialize

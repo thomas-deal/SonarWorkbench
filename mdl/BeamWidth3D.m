@@ -1,7 +1,7 @@
-function [BWH, BWV] = BeamWidth3D(psi,theta,BP,varargin)
-%% function [BWH, BWV] = BeamWidth3D(psi,theta,BP)
-% function [BWH, BWV] = BeamWidth3D(psi,theta,BP,psi0,theta0)
-% function [BWH, BWV] = BeamWidth3D(psi,theta,BP,psi0,theta0,renorm)
+function [BWV, BWH] = BeamWidth3D(theta,psi,BP,varargin)
+%% function [BWV, BWH] = BeamWidth3D(theta,psi,BP)
+% function [BWV, BWH] = BeamWidth3D(theta,psi,BP,theta0,psi0)
+% function [BWV, BWH] = BeamWidth3D(theta,psi,BP,theta0,psi0,renorm)
 %
 % Calculates the horizontal and vertical -3 dB beam widths of a 3D beam
 % pattern. Peak location can be aided with optional parameters psi0 and
@@ -10,14 +10,14 @@ function [BWH, BWV] = BeamWidth3D(psi,theta,BP,varargin)
 % value.
 %
 % Inputs:
-%           psi     - Azimuthal angle vector, deg
 %           theta   - Elevation angle vector, deg
+%           psi     - Azimuthal angle vector, deg
 %           BP      - Beam pattern matrix with elevation angles in rows,
 %                     azimuthal angles in columns, complex linear units
 %
 % Optional Inputs:
-%           psi0    - Initial azimuth estimate for peak search, deg
 %           theta0  - Initial elevation estimate for peak search, deg
+%           psi0    - Initial azimuth estimate for peak search, deg
 %           renorm  - Re-normalize beam pattern about peak value
 %
 % Outputs:

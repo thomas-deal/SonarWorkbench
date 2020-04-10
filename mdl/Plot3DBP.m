@@ -1,17 +1,17 @@
-function Plot3DBP(psi,theta,BP,varargin)
-%% function Plot3DBP(psi,theta,BP)
-% function Plot3DBP(psi,theta,BP,PlotType)
-% function Plot3DBP(psi,theta,BP,PlotType,dBScale)
-% function Plot3DBP(psi,theta,BP,PlotType,dBScale,hax)
-% function Plot3DBP(psi,theta,BP,PlotType,dBScale,hax,ax,ay,az)
+function Plot3DBP(theta,psi,BP,varargin)
+%% function Plot3DBP(theta,psi,BP)
+% function Plot3DBP(theta,psi,BP,PlotType)
+% function Plot3DBP(theta,psi,BP,PlotType,dBScale)
+% function Plot3DBP(theta,psi,BP,PlotType,dBScale,hax)
+% function Plot3DBP(theta,psi,BP,PlotType,dBScale,hax,ax,ay,az)
 %
 % Plots a beam pattern in 3D space. Beam pattern is defined over azimuthal
 % angles psi and elevation angles theta. User can choose to plot in a new
 % figure or in an existing axis.
 %
 % Inputs:
-%           psi     - Azimuthal angle vector, deg
 %           theta   - Elevation angle vector, deg
+%           psi     - Azimuthal angle vector, deg
 %           BP      - Beam pattern matrix with elevation angles in rows,
 %                     azimuthal angles in columns, complex linear units
 %
