@@ -48,15 +48,15 @@ lambda = 1;
 Beam.psi = psi;
 Beam.theta = theta;
 Beam.lambda = lambda;
-Beam.BP = BeamPattern(VS,Element,Beam,lambda,psi,theta);
+Beam.BP = BeamPattern(VS,Element,Beam,lambda,theta,psi);
 %% Analyze Beam Pattern
-Beam.DI = CalculateDI(psi,theta,Beam.BP);
-[Beam.BWH, Beam.BWV] = BeamWidth3D(psi,theta,Beam.BP);
+Beam.DI = CalculateDI(theta,psi,Beam.BP);
+[Beam.BWV, Beam.BWH] = BeamWidth3D(theta,psi,Beam.BP);
 PlotArray(VS,Element,Beam)
-Plot3DBP(psi,theta,Beam.BP,[],[],gca,VS.ax,VS.ay,VS.az)
+Plot3DBP(theta,psi,Beam.BP,[],[],gca,VS.ax,VS.ay,VS.az)
 title(['Cardioid Beam Pattern, ', ...
-	   '\psi_0 = ' num2str(psi0,'%2.1f') '\circ, ', ...
 	   '\theta_0 = ' num2str(theta0,'%2.1f') '\circ, ', ...
+	   '\psi_0 = ' num2str(psi0,'%2.1f') '\circ, ', ...
 	   'DI = ' num2str(Beam.DI,'%2.1f') ' dB, ', ...
-	   'BW = ' num2str(Beam.BWH,'%2.1f') '\circ x ' num2str(Beam.BWV,'%2.1f') '\circ'])
+	   'BW = ' num2str(Beam.BWV,'%2.1f') '\circ x ' num2str(Beam.BWH,'%2.1f') '\circ'])
 

@@ -1,15 +1,15 @@
-function DI = CalculateDI(psi,theta,BP)
-%% function DI = CalculateDI(psi,theta,BP)
+function DI = CalculateDI(theta,psi,BP)
+%% function DI = CalculateDI(theta,psi,BP)
 %
 % Calculates the directivity index of beam pattern BP defined over
-% azimuthal angles psi and elevation angles theta. (Directivity Index is a
+% elevation angles theta and azimuthal angles psi. (Directivity Index is a
 % special case of array gain for isotropic noise.) It is assumed that theta
 % spans +/-90 degrees. Any azimuths for which the beam pattern is not
 % defined are assumed to contribute zero energy to the beam pattern.
 %
 % Inputs:
-%           psi     - Azimuthal angle vector, deg
 %           theta   - Elevation angle vector, deg
+%           psi     - Azimuthal angle vector, deg
 %           BP      - Beam pattern matrix with elevation angles in rows,
 %                     azimuthal angles in columns, complex linear units
 %

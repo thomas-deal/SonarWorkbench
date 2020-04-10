@@ -8,9 +8,9 @@ function PlotArray(Array,Element,varargin)
 % Beam is defined.
 %
 % Inputs:
-%           Array   - Array structure with the following fields
+%           Array       - Array structure with the following fields
 %               [required]
-%			.Ne	  - Number of elements
+%               .Ne     - Number of elements
 %               .ex     - Element x position vector, m
 %               .ey     - Element y position vector, m
 %               .ez     - Element z position vector, m
@@ -21,9 +21,10 @@ function PlotArray(Array,Element,varargin)
 %               .ax     - Array x position, m
 %               .ay     - Array y position, m
 %               .az     - Array z position, m
-%			.eindex - Vector of indices into element structure vector
-%				     to support non-uniform element arrays
-%           Element - Element structure vector with the following required fields
+%               .eindex - Vector of indices into element structure vector
+%                         to support non-uniform element arrays
+%           Element     - Element structure vector with the following 
+%                         required fields
 %               .shapex - Element shape x coordinates, m
 %               .shapey - Element shape y coordinates, m
 %               .shapez - Element shape z coordinates, m

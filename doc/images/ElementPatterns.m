@@ -62,80 +62,80 @@ OmniBeam.ew = 1;
 OmniBeam.psi = psi;
 OmniBeam.theta = theta;
 OmniBeam.lambda = lambda;
-OmniBeam.BP = BeamPattern(Array,OmniElement,OmniBeam,lambda,psi,theta);
+OmniBeam.BP = BeamPattern(Array,OmniElement,OmniBeam,lambda,theta,psi);
 % Linear Element
 LineBeam.ew = 1;
 LineBeam.psi = psi;
 LineBeam.theta = theta;
 LineBeam.lambda = lambda;
-LineBeam.BP = BeamPattern(Array,LineElement,LineBeam,lambda,psi,theta);
+LineBeam.BP = BeamPattern(Array,LineElement,LineBeam,lambda,theta,psi);
 % Cosine Element
 CosBeam.ew = 1;
 CosBeam.psi = psi;
 CosBeam.theta = theta;
 CosBeam.lambda = lambda;
-CosBeam.BP = BeamPattern(Array,CosElement,CosBeam,lambda,psi,theta);
+CosBeam.BP = BeamPattern(Array,CosElement,CosBeam,lambda,theta,psi);
 % Circular Piston Element
 CircBeam.ew = 1;
 CircBeam.psi = psi;
 CircBeam.theta = theta;
 CircBeam.lambda = lambda;
-CircBeam.BP = BeamPattern(Array,CircElement,CircBeam,lambda,psi,theta);
+CircBeam.BP = BeamPattern(Array,CircElement,CircBeam,lambda,theta,psi);
 % Rectangular Piston Element
 RectBeam.ew = 1;
 RectBeam.psi = psi;
 RectBeam.theta = theta;
 RectBeam.lambda = lambda;
-RectBeam.BP = BeamPattern(Array,RectElement,RectBeam,lambda,psi,theta);
+RectBeam.BP = BeamPattern(Array,RectElement,RectBeam,lambda,theta,psi);
 % Annular Piston Element
 AnnBeam.ew = 1;
 AnnBeam.psi = psi;
 AnnBeam.theta = theta;
 AnnBeam.lambda = lambda;
-AnnBeam.BP = BeamPattern(Array,AnnElement,AnnBeam,lambda,psi,theta);
+AnnBeam.BP = BeamPattern(Array,AnnElement,AnnBeam,lambda,theta,psi);
 % Hexagonal Piston Element
 HexBeam.ew = 1;
 HexBeam.psi = psi;
 HexBeam.theta = theta;
 HexBeam.lambda = lambda;
-HexBeam.BP = BeamPattern(Array,HexElement,HexBeam,lambda,psi,theta);
+HexBeam.BP = BeamPattern(Array,HexElement,HexBeam,lambda,theta,psi);
 %% Plot Element Patterns
 figure
 set(gcf,'Position',pos)
 % Omnidirectional Element
 subplot(2,3,1)
 PlotArray(Array,OmniElement,OmniBeam,gca,1)
-Plot3DBP(psi,theta,OmniBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,OmniBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Omnidirectional')
 % Linear Element
 subplot(2,3,2)
 PlotArray(Array,LineElement,LineBeam,gca,1)
-Plot3DBP(psi,theta,LineBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,LineBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Uniform Line')
 % Cosine Element
 subplot(2,3,3)
 PlotArray(Array,CosElement,CosBeam,gca,1)
-Plot3DBP(psi,theta,CosBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,CosBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Cosine')
 % Circular Piston Element
 subplot(2,4,5)
 PlotArray(Array,CircElement,CircBeam,gca,1)
-Plot3DBP(psi,theta,CircBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,CircBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Circular Piston')
 % Rectangular Piston Element
 subplot(2,4,6)
 PlotArray(Array,RectElement,RectBeam,gca,1)
-Plot3DBP(psi,theta,RectBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,RectBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Rectangular Piston')
 % Annular Piston Element
 subplot(2,4,7)
 PlotArray(Array,AnnElement,AnnBeam,gca,1)
-Plot3DBP(psi,theta,AnnBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,AnnBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Annular Piston')
 % Hexagonal Piston Element
 subplot(2,4,8)
 PlotArray(Array,HexElement,HexBeam,gca,1)
-Plot3DBP(psi,theta,HexBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
+Plot3DBP(theta,psi,HexBeam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
 title('Hexagonal Piston')
 %% Save Plot
 orient(gcf,'landscape')

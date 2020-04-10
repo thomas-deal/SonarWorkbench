@@ -12,7 +12,14 @@ Conventional beamforming independently calculates amplitudes, $a_i$, and phases,
 
 \subsubsection{Amplitude weights}
 
-Amplitude shading exploits the Fourier transform relationship between the beam's aperture function and its far field beam pattern. Consequently, sonar designers often use weights, or shading coefficients, taken from standard window functions. Examples include Uniform, Hanning, Hamming, Chebyshev, and Raised Cosine. This example uses two Chebyshev windows, one of length 5 in the horizontal direction, and one of length 10 in the vertical direction. The total weight for each element is the product of the two windows evaluated at its coordinate the horizontal and vertical direction.
+Amplitude shading exploits the Fourier transform relationship between the beam's aperture function and its far field beam pattern. Consequently, sonar designers often use weights, or shading coefficients, taken from standard window functions. Examples include Uniform, Hanning, Hamming, and Chebyshev, as shown in \figname~\ref{fig:WindowFunctions}. The example beamformer uses two Chebyshev windows, one of length 5 in the horizontal direction, and one of length 10 in the vertical direction. The total weight for each element is the product of the two windows evaluated at its coordinate the horizontal and vertical direction.
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=\textwidth]{WindowFunctions}
+\caption{\label{fig:WindowFunctions}Common window functions used for amplitude shading}
+\end{center}
+\end{figure}
 
 Since the final beam pattern will be normalized for unity gain along its maximum response axis, the user is not required to normalize the amplitude weights or limit their amplitude. However, it is best to avoid negative amplitude weights and instead represent negative numbers with phase weights.
 
@@ -22,20 +29,3 @@ Without phase weights, i.e. the beam pattern weights are purely real, the beam p
 \begin{equation}
 \phi_i(\lambda,\theta_0,\psi_0) = -2\pi\left(\frac{\cos\theta_0\cos\psi_0}{\lambda}x_i + \frac{\cos\theta_0\sin\psi_0}{\lambda}y_i + \frac{\sin\theta_0}{\lambda}z_i \right).
 \end{equation}
-
-\subsection{Computing beam patterns}
-
-When a suitable set of complex weights has been defined, the beam pattern is then calculated as
-\begin{equation}
-B(\lambda,\theta,\psi) = \sum_{i=1}^{N_e} w_i(\lambda,\theta_0,\psi_0)E_i(\lambda,\theta,\psi)e^{j2\pi\left(\frac{\cos\theta\cos\psi}{\lambda}x_i + \frac{\cos\theta\sin\psi}{\lambda}y_i + \frac{\sin\theta}{\lambda}z_i\right)},
-\end{equation}
-where $E_i(\lambda,\theta,\psi)$ is the element pattern for the $i^{th}$ element, rotated according to the element orientation ($\gamma_i$,$\theta_i$,$\psi_i$), and ($x_i$,$y_i$,$z_i$) are the coordinates of the $i^{th}$ element.
-
-The beam pattern for the example array with no beam steering is shown in \figname~\ref{fig:SampleBeam}. The array is redrawn in that figure with element opacity proportional to amplitude weight.
-
-\begin{figure}[!ht]
-\begin{center}
-\includegraphics[width=\textwidth]{SampleBeam}
-\caption{\label{fig:SampleBeam}Example beam pattern for rectangular planar array}
-\end{center}
-\end{figure}

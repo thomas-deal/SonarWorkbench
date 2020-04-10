@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{bm}
 \usepackage{dcolumn}
 \usepackage{multirow}
@@ -16,7 +16,7 @@
 \DeclareMathOperator{\sech}{sech}
 \newcolumntype{d}[1]{D{.}{.}{#1} }
 \lstset{
-	basicstyle=\footnotesize\ttfamily,
+	basicstyle=\tiny\ttfamily,
 	frame=single,
 	columns=fixed,
 	breaklines=true
@@ -39,14 +39,14 @@
 
 \begin{document}
 
-\title{Sonar Workbench User's Guide}
-\author{Thomas J. Deal}
+\title{Sonar Workbench v1.0 User's Guide}
+\author{Thomas J Deal, PhD}
 \affil{Naval Undersea Warfare Center, Newport, RI}
 \date{\today}
 \maketitle
 
 \begin{abstract}
-Abstract goes here.
+Sonar Workbench is a suite of Matlab tools for the design and analysis of sonar systems. Version 1.0 focuses on array construction and beam pattern construction and analysis. It includes multiple element types, from which the user constructs an array with arbitrary element position and orientation. The user defines complex weights for each element to create a beam with the desired shape, which can be evaluated at any elevation and azimuthal angles, plotted in 3D space, and measured for beam width and directivity index.
 \end{abstract}
 
 \newpage
@@ -59,6 +59,7 @@ Abstract goes here.
 \include{Elements}
 \include{Arrays}
 \include{Beams}
+\include{Analysis}
 
 \newpage
 \bibliographystyle{ieeetr}

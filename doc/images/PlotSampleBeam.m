@@ -2,7 +2,7 @@
 addpath(fullfile('..','..','mdl'))
 addpath(fullfile('..','..','examples'))
 %% Plot Settings
-pos = [0 0 800 600];
+pos = [0 0 1000 600];
 %% Acoustic Parameters
 lambda = 1;         % Wavelength, m
 %% Computational Grid
@@ -16,12 +16,18 @@ SampleBeam
 Beam.psi = psi;
 Beam.theta = theta;
 Beam.lambda = lambda;
-Beam.BP = BeamPattern(Array,Element,Beam,lambda,psi,theta);
+Beam.BP = BeamPattern(Array,Element,Beam,lambda,theta,psi);
 %% Plot
-PlotArray(Array,Element,Beam)
-Plot3DBP(psi,theta,Beam.BP,[],[],gca,Array.ax,Array.ay,Array.az)
-%% Finish Plot
+figure
+subplot(1,2,1)
+PlotArray(Array,Element,Beam,gca)
+Plot3DBP(theta,psi,Beam.BP,1,[],gca)
 set(gca,'SortMethod','ChildOrder')
+subplot(1,2,2)
+PlotArray(Array,Element,Beam,gca)
+Plot3DBP(theta,psi,Beam.BP,2,[],gca)
+set(gca,'SortMethod','ChildOrder')
+%% Finish Plot
 set(gcf,'Position',pos)
 %% Save Plot
 set(gcf,'Renderer','painters','PaperPositionMode','auto')
