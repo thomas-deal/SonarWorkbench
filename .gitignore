@@ -1,5 +1,6 @@
 # Autosave files
 *~
+*.*~
 # Latex intermediate files
 /doc/tex/*
 !/doc/tex/*.tex
