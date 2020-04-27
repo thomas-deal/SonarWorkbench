@@ -27,5 +27,6 @@ Since the final beam pattern will be normalized for unity gain along its maximum
 
 Without phase weights, i.e. the beam pattern weights are purely real, the beam pattern is unsteered. The user can steer the beam to an arbitrary elevation and azimuth, ($\theta_0$,$\psi_0$) using the following formula for the $i^{th}$ element's phase,
 \begin{equation}
-\phi_i(\lambda,\theta_0,\psi_0) = -2\pi\left(\frac{\cos\theta_0\cos\psi_0}{\lambda}x_i + \frac{\cos\theta_0\sin\psi_0}{\lambda}y_i + \frac{\sin\theta_0}{\lambda}z_i \right).
+\phi_i(\lambda,\theta_0,\psi_0) = -2\pi\left(\frac{\cos\theta_0\cos\psi_0}{\lambda}x_i + \frac{\cos\theta_0\sin\psi_0}{\lambda}y_i + \frac{-\sin\theta_0}{\lambda}z_i \right).\label{eq:phasesteer}
 \end{equation}
+Note that the negative sign in the third term in \eqnname~(\ref{eq:phasesteer}) accounts for the definition of positive elevation angles in the negative $z$ direction, as shown in \figname~\ref{fig:NED}.

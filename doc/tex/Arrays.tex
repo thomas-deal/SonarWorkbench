@@ -2,9 +2,7 @@
 
 An array is a collection of elements. Each element in an array has a position and orientation in the array frame. The array itself also has a position and orientation in the body frame. Sonar Workbench supports arrays with mixed element types, e.g. vector sensor arrays with a mix of hydrophones (omnidirectional elements) and accelerometers (cosine elements). The array structure has fields which contain this information.
 
-The field \texttt{.Ne} holds the integer number of elements in the array. The position, orientation, and element type fields are all column vectors of length \texttt{Ne}. The user is free to choose any convenient element order, as long as that order is consistent across all fields. Three vectors determine the element positions in the array frame, \texttt{.ex}, \texttt{.ey}, and \texttt{.ez}, all in units of meters. Three additional vectors determine the element orientations in the array frame, \texttt{.egamma}, \texttt{.etheta}, and \texttt{.epsi}, corresponding to roll, pitch, and yaw, in degrees.
-
-The array structure holds an additional 6 fields with scalars corresponding to the array position and orientation in the body frame. These fields are \texttt{.ax}, \texttt{.ay}, \texttt{.az}, \texttt{.agamma}, \texttt{.atheta}, and \texttt{.apsi}, in units of meters and degrees. Table~\ref{tab:ArrayFields} summarizes the fields in the array structure. 
+The field \texttt{.Ne} holds the integer number of elements in the array. The position, orientation, and element type fields are all column vectors of length \texttt{Ne}. The user is free to choose any convenient element order, as long as that order is consistent across all fields. Three vectors determine the element positions in the array frame, \texttt{.ex}, \texttt{.ey}, and \texttt{.ez}, all in units of meters. Three additional vectors determine the element orientations in the array frame, \texttt{.egamma}, \texttt{.etheta}, and \texttt{.epsi}, corresponding to roll, pitch, and yaw, in degrees. Table~\ref{tab:ArrayFields} summarizes the fields in the array structure. 
 
 \begin{table}[!ht]
 	\begin{center}
@@ -21,12 +19,6 @@ The array structure holds an additional 6 fields with scalars corresponding to t
 			\texttt{.etheta} & element pitch orientation vector ($^\circ$) \\
 			\texttt{.epsi} & element yaw orientation vector ($^\circ$) \\
 			\texttt{.eindex} & element type index (optional) \\
-			\texttt{.ax} & array $x$ position (m) \\
-			\texttt{.ay} & array $y$ position (m) \\
-			\texttt{.az} & array $z$ position (m) \\
-			\texttt{.agamma} & array roll orientation ($^\circ$) \\
-			\texttt{.atheta} & array pitch orientation ($^\circ$) \\
-			\texttt{.apsi} & array yaw orientation ($^\circ$) \\
 		\end{tabular}
 	\end{center}
 \end{table}
@@ -35,7 +27,7 @@ The array structure holds an additional 6 fields with scalars corresponding to t
 
 When all the array elements are identical, the array structure does not need the \texttt{.eindex} field. An example array structure is found in \texttt{SampleArray.m}, shown in Listing~\ref{lst:SampleArray}.
 
-\lstinputlisting[caption={\texttt{SampleArray.m}},label={lst:SampleArray}]{../../examples/SampleArray.m}
+\lstinputlisting[float,caption={\texttt{SampleArray.m}},label={lst:SampleArray}]{../../examples/SampleArray.m}
 
 This planar array contains 50 rectangular elements arranged in a grid 5 elements wide by 10 elements high. The geometry is shown in \figname~\ref{fig:SampleArray}, with elements numbered according to their order in the array structure.
 
