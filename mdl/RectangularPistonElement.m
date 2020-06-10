@@ -1,6 +1,6 @@
-function E = RectangularPistonElement(Element,lambda,psi,theta,varargin)
-%% function E = RectangularPistonElement(Element,lambda,psi,theta)
-% function E = RectangularPistonElement(Element,lambda,psi,theta,gammar,thetar,psir)
+function E = RectangularPistonElement(Element,lambda,theta,psi,varargin)
+%% function E = RectangularPistonElement(Element,lambda,theta,psi)
+% function E = RectangularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir)
 %
 % Calculates the element pattern for an ideal rectangular plane piston
 % of width w and height h at wavelength lambda over azimuthal angles psi
@@ -16,8 +16,8 @@ function E = RectangularPistonElement(Element,lambda,psi,theta,varargin)
 %               .w      - Rectangular piston width, m
 %               .h      - Rectangular piston height, m
 %           lambda  - Acoustic wavelength, 1/m
-%           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
+%           psi     - Azimuthal angle vector or matrix, deg
 %
 % Optional Inputs:
 %           gammar  - Roll rotation angle, deg
@@ -87,15 +87,7 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-X0 = cosd(-Theta).*cosd(Psi);
-Y0 = cosd(-Theta).*sind(Psi);
-Z0 = sind(-Theta);
-ROT = RotationMatrix(gammar,thetar,psir)';
-X = ROT(1,1)*X0 + ROT(1,2)*Y0 + ROT(1,3)*Z0;
-Y = ROT(2,1)*X0 + ROT(2,2)*Y0 + ROT(2,3)*Z0;
-Z = ROT(3,1)*X0 + ROT(3,2)*Y0 + ROT(3,3)*Z0;
-Theta = -asind(Z);
-Psi = atan2d(Y,X);
+[Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir);
 %% Spatial Grid
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
@@ -103,6 +95,6 @@ fz = sind(-Theta)/lambda;
 E = sinc(fy*w).*sinc(fz*h);
 %% Baffle Pattern
 if baffle>0
-    Baf = ComputeBaffle(baffle,Psi,Theta);
+    Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end

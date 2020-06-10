@@ -1,5 +1,5 @@
-function B = ComputeBaffle(baffle,psi,theta)
-%% function B = ComputeBaffle(baffle,psi,theta)
+function B = ComputeBaffle(baffle,theta,psi)
+%% function B = ComputeBaffle(baffle,theta,psi)
 %
 % Creates a matrix that simulates the effect of baffling when multiplied by
 % a beam pattern. Assumes azimuthal angles psi and elevation angles theta
@@ -11,8 +11,8 @@ function B = ComputeBaffle(baffle,psi,theta)
 %                     0 = no baffle
 %                     1 = hard baffle
 %                     2 = raised cosine baffle
-%           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
+%           psi     - Azimuthal angle vector or matrix, deg
 %
 % Outputs:
 %           E       - Baffle matrix
