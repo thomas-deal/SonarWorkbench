@@ -1,6 +1,6 @@
-function E = AnnularPistonElement(Element,lambda,psi,theta,varargin)
-%% function E = AnnularPistonElement(Element,lambda,psi,theta)
-% function E = AnnularPistonElement(Element,lambda,psi,theta,gammar,thetar,psir)
+function E = AnnularPistonElement(Element,lambda,theta,psi,varargin)
+%% function E = AnnularPistonElement(Element,lambda,theta,psi)
+% function E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir)
 %
 % Calculates the element pattern for an ideal annular plane piston of
 % outer radius a and iner radius b at wavelength lambda over azimuthal
@@ -16,8 +16,8 @@ function E = AnnularPistonElement(Element,lambda,psi,theta,varargin)
 %               .a      - Element outer radius, m
 %               .b      - Element inner radius, m
 %           lambda  - Acoustic wavelength, 1/m
-%           psi     - Azimuthal angle vector or matrix, deg
 %           theta   - Elevation angle vector or matrix, deg
+%           psi     - Azimuthal angle vector or matrix, deg
 %
 % Optional Inputs:
 %           gammar  - Roll rotation angle, deg
@@ -87,15 +87,7 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-X0 = cosd(-Theta).*cosd(Psi);
-Y0 = cosd(-Theta).*sind(Psi);
-Z0 = sind(-Theta);
-ROT = RotationMatrix(gammar,thetar,psir)';
-X = ROT(1,1)*X0 + ROT(1,2)*Y0 + ROT(1,3)*Z0;
-Y = ROT(2,1)*X0 + ROT(2,2)*Y0 + ROT(2,3)*Z0;
-Z = ROT(3,1)*X0 + ROT(3,2)*Y0 + ROT(3,3)*Z0;
-Theta = -asind(Z);
-Psi = atan2d(Y,X);
+[Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir);
 %% Spatial Grid
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
@@ -105,6 +97,6 @@ E = 2*(a*besselj(1,2*pi*fr*a) - b*besselj(1,2*pi*fr*b))./(2*pi*fr*(a^2-b^2));
 E(fr==0) = 1;
 %% Baffle Pattern
 if baffle>0
-    Baf = ComputeBaffle(baffle,Psi,Theta);
+    Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end

@@ -78,11 +78,12 @@ end
 eindex = 1;
 if isfield(Array,'eindex')
 	if ~isempty(Array.eindex)
-		eindex = Array.eindex;
+        if length(Array.eindex)~=Array.Ne
+            eindex = Array.eindex(1)*ones(Array.Ne,1);
+        else
+            eindex = Array.eindex;
+        end
 	end
-end
-if length(eindex)==1
-	eindex = eindex*ones(Array.Ne,1);
 end
 if max(eindex) > length(Element)
 	disp('BeamPattern: Not enough elements defined for non-uniform array, reverting to uniform array of type Element(1)')
@@ -96,24 +97,16 @@ fz = sind(-Theta)/lambda;
 psilast = NaN;
 thetalast = NaN;
 eindexlast = NaN;
-BP = zeros(size(Psi));
-hwait = waitbar(0,'Processing');
-set(hwait,'Name','BeamPattern')
+BP = complex(zeros(size(Psi)));
+E = 1+0i;
 for i=1:Array.Ne
-    waitbar(i/Array.Ne,hwait,['Processing Element ' num2str(i) '/' num2str(Array.Ne)]);
     if(Array.epsi(i)~=psilast)||(Array.etheta(i)~=thetalast)||(eindex(i)~=eindexlast)
         psilast = Array.epsi(i);
         thetalast = Array.etheta(i);
 		eindexlast = eindex(i);
-        try
-            eval(['E = ' Element(eindex(i)).type '(Element(eindex(i)),lambda,Psi,Theta,Array.egamma(i),Array.etheta(i),Array.epsi(i));']);
-        catch me %#ok<NASGU>
-            disp(['Element pattern generator ' Element(eindex(i)).type '.m does not exist. Using omnidirectional element instead.'])     
-            E = OmnidirectionalElement(Element(eindex(i)),lambda,Psi,Theta,Array.egamma(i),Array.etheta(i),Array.epsi(i));
-        end
+        E = ElementPattern(Element(eindex(i)),lambda,Theta,Psi,Array.egamma(i),Array.etheta(i),Array.epsi(i));
     end
     BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));
 end
-close(hwait)
 %% Normalize
 BP = BP/sum(abs(Beam.ew));
