@@ -75,7 +75,7 @@ else
     Psi = psi;
 end
 %% Support for Non-Uniform Arrays
-eindex = 1;
+eindex = ones(Array.Ne,1);
 if isfield(Array,'eindex')
 	if ~isempty(Array.eindex)
         if length(Array.eindex)~=Array.Ne
@@ -98,7 +98,7 @@ psilast = NaN;
 thetalast = NaN;
 eindexlast = NaN;
 BP = complex(zeros(size(Psi)));
-E = 1+0i;
+E = complex(ones(size(Psi)));
 for i=1:Array.Ne
     if(Array.epsi(i)~=psilast)||(Array.etheta(i)~=thetalast)||(eindex(i)~=eindexlast)
         psilast = Array.epsi(i);

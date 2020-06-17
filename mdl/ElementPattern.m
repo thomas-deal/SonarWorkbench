@@ -6,7 +6,7 @@ function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
 %
 % Inputs:
 %           Element - Element structure with the following fields
-%               .type   - Element type string
+%               .type   - Element type string or enumeration
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -20,23 +20,44 @@ function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
 %           E       - Element pattern, linear units
 %
 
+%% Support for Element Pattern Generator Name
+if ischar(Element.type)
+    switch Element.type
+        case 'OmnidirectionalElement'
+            etype = 0;
+        case 'CosineElement'
+            etype = 1;
+        case 'LinearElement'
+            etype = 2;
+        case 'CircularPistonElement'
+            etype = 3;
+        case 'RectangularPistonElement'
+            etype = 4;
+        case 'HexagonalPistonElement'
+            etype = 5;
+        case 'AnnularPistonElement'
+            etype = 6;
+        otherwise
+            disp(['Element pattern generator ' Element.type '.m does not exist. Using omnidirectional element instead.'])  
+            etype = 0;
+    end
+else
+    etype = Element.type;
+end
 %% Calculate
-switch Element.type
-    case 'AnnularPistonElement'
-        E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'CircularPistonElement'
-        E = CircularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'CosineElement'
-        E = CosineElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'HexagonalPistonElement'
-        E = HexagonalPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'LinearElement'
-        E = LinearElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'OmnidirectionalElement'
+switch etype
+    case 0
         E = OmnidirectionalElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    case 'RectangularPistonElement'
+    case 1
+        E = CosineElement(Element,lambda,theta,psi,gammar,thetar,psir);
+    case 2
+        E = LinearElement(Element,lambda,theta,psi,gammar,thetar,psir);
+    case 3
+        E = CircularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+    case 4
         E = RectangularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
-    otherwise
-        disp(['Element pattern generator ' Element.type '.m does not exist. Using omnidirectional element instead.'])               
-        E = OmnidirectionalElement(Element,lambda,theta,psi,gammar,thetar,psir); 
+    case 5
+        E = HexagonalPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+    case 6
+        E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
 end
