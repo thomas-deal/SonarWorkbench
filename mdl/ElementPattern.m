@@ -90,4 +90,6 @@ switch etype
         E = HexagonalPistonElement(thisElement,lambda,theta,psi,gammar,thetar,psir);
     case 6
         E = AnnularPistonElement(thisElement,lambda,theta,psi,gammar,thetar,psir);
+    otherwise
+        E = CosineElement(thisElement,lambda,theta,psi,gammar,thetar,psir);
 end

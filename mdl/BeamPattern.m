@@ -79,7 +79,7 @@ eindex = ones(Array.Ne,1);
 if isfield(Array,'eindex')
 	if ~isempty(Array.eindex)
         if length(Array.eindex)~=Array.Ne
-            eindex = Array.eindex(1)*ones(Array.Ne,1);
+            eindex = repmat(Array.eindex(1),Array.Ne,1);
         else
             eindex = Array.eindex;
         end

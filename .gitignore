@@ -1,8 +1,13 @@
 # Autosave files
 *~
 *.*~
+
 # Latex intermediate files
 /doc/tex/*
 !/doc/tex/*.tex
 !/doc/tex/*.bib
 /doc/images/*converted-to.pdf
+
+# Matlab files
+slprj/
+*.slxc
