@@ -4,16 +4,12 @@ close all
 path(pathdef)
 addpath(fullfile('..','mdl'))
 %% Define Elements
-Element(1).type = 'OmnidirectionalElement';
-Element(1).baffle = 0;
-Element(1).shapex = [0 0];
-Element(1).shapey = [0 0];
-Element(1).shapez = [0 0];
-Element(2).type = 'CosineElement';
-Element(2).baffle = 0;
-Element(2).shapex = [1 -1];
-Element(2).shapey = [0 0];
-Element(2).shapez = [0 0];
+Element.type(1,1) = 0;
+Element.baffle(1,1) = 0;
+Element = AddElementShape(Element,1);
+Element.type(1,2) = 1;
+Element.baffle(1,2) = 0;
+Element = AddElementShape(Element,2);
 %% Define Vector Sensor
 VS.Ne = 4;
 VS.ex = zeros(VS.Ne,1);

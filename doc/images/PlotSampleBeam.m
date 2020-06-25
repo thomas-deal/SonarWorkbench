@@ -1,6 +1,6 @@
 %% Setup Path
 addpath(fullfile('..','..','mdl'))
-addpath(fullfile('..','..','examples'))
+addpath(fullfile('..','..','test'))
 %% Plot Settings
 pos = [0 0 1000 600];
 %% Acoustic Parameters

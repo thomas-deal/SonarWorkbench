@@ -85,7 +85,7 @@ if isfield(Array,'eindex')
         end
 	end
 end
-if max(eindex) > length(Element)
+if max(eindex) > length(Element.type)
 	disp('BeamPattern: Not enough elements defined for non-uniform array, reverting to uniform array of type Element(1)')
 	eindex = ones(Array.Ne,1);
 end
@@ -94,17 +94,19 @@ fx = cosd(-Theta).*cosd(Psi)/lambda;
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
 %% Compute Beam Pattern
-psilast = NaN;
+gammalast = NaN;
 thetalast = NaN;
+psilast = NaN;
 eindexlast = NaN;
 BP = complex(zeros(size(Psi)));
 E = complex(ones(size(Psi)));
 for i=1:Array.Ne
-    if(Array.epsi(i)~=psilast)||(Array.etheta(i)~=thetalast)||(eindex(i)~=eindexlast)
-        psilast = Array.epsi(i);
+    if(Array.egamma(i)~=gammalast)||(Array.etheta(i)~=thetalast)||(Array.epsi(i)~=psilast)||(eindex(i)~=eindexlast)
+        gammalast = Array.egamma(i);
         thetalast = Array.etheta(i);
-		eindexlast = eindex(i);
-        E = ElementPattern(Element(eindex(i)),lambda,Theta,Psi,Array.egamma(i),Array.etheta(i),Array.epsi(i));
+		psilast = Array.epsi(i);
+        eindexlast = eindex(i);
+        E = ElementPattern(Element,eindex(i),lambda,Theta,Psi,Array.egamma(i),Array.etheta(i),Array.epsi(i));
     end
     BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));
 end

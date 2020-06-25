@@ -1,5 +1,5 @@
-function Element = AddElementShape(Element)
-%% function Element = AddElementShape(Element)
+function Element = AddElementShape(Element,eindex)
+%% function Element = AddElementShape(Element,eindex)
 %
 % Generates x,y,z coordinates of element face shape for canonical elements.
 % Defaults to single point (0,0,0) if input element type is not recognized.
@@ -7,67 +7,75 @@ function Element = AddElementShape(Element)
 % Inputs:
 %           Element - Element structure with the following fields
 %               [required]
-%               .type   - Element pattern generator string
-%                         (name of .m file)
+%               .type   - Element type enumeration
 %               [optional]
 %               .L      - Linear element length, m
 %               .axis   - Axis linear element is parallel to before
-%                         rotation, 'x','y','z'
+%                         rotation, 0=x,1=y,2=z
 %               .a      - Circular piston radius, m
 %               .w      - Rectangular piston width, m
 %               .h      - Rectangular piston height, m
 %               .a      - Hexagonal element inscribed circle radius, m
+%           eindex  - Index of element for heterogrneous arrays
 %
 % Outputs:
 %           Element - Copy of input Element structure with the added fields
-%               .shapex - x coordinates of element shape, m
-%               .shapey - y coordinates of element shape, m
-%               .shapez - z coordinates of element shape, m
+%               .shapex{eindex} - x coordinates of element shape, m
+%               .shapey{eindex} - y coordinates of element shape, m
+%               .shapez{eindex} - z coordinates of element shape, m
 %
 
+%% Check Inputs
+if nargin==1
+    eindex = 1;
+else
+    if isempty(eindex)
+        eindex = 1;
+    end
+end
 %% Initialize
-Element.shapex = 0;
-Element.shapey = 0;
-Element.shapez = 0;
+Element.shapex{eindex} = 0;
+Element.shapey{eindex} = 0;
+Element.shapez{eindex} = 0;
 %% Check Input
 if ~isfield(Element,'type')
     disp('Element type not defined in Element.type. Exiting.')
     return
 end
 %% Generate Shape
-switch Element.type
-    case 'OmnidirectionalElement'
+switch Element.type(eindex)
+    case 0      % Omnidirectional Element
         % Use default
-    case 'LinearElement'
+    case 1      % Cosine Element
+        % Use default
+    case 2      % Linear Element
         if ~isfield(Element,'axis')
             disp('Linear element aligned axis not defined in Element.axis. Aligning element with z axis.')
-            Element.axis = 'z';
+            Element.axis = 2;
         end
         switch Element.axis
-            case 'x'
-                Element.shapex = Element.L/2*[-1 1];
-                Element.shapey = [0 0];
-                Element.shapez = [0 0];
-            case 'y'
-                Element.shapex = [0 0];
-                Element.shapey = Element.L/2*[-1 1];
-                Element.shapez = [0 0];
-            case 'z'
-                Element.shapex = [0 0];
-                Element.shapey = [0 0];
-                Element.shapez = Element.L/2*[-1 1];
+            case 0
+                Element.shapex{eindex} = Element.L/2*[-1 1];
+                Element.shapey{eindex} = [0 0];
+                Element.shapez{eindex} = [0 0];
+            case 1
+                Element.shapex{eindex} = [0 0];
+                Element.shapey{eindex} = Element.L/2*[-1 1];
+                Element.shapez{eindex} = [0 0];
+            case 2
+                Element.shapex{eindex} = [0 0];
+                Element.shapey{eindex} = [0 0];
+                Element.shapez{eindex} = Element.L/2*[-1 1];
         end
-    case 'CosineElement'
-        % Use default
-    case 'CircularPistonElement'
+    case 3      % Circular Piston Element
         if ~isfield(Element,'a')
             disp('Circular piston element radius not defined in Element.a. Using default radius 1 cm.')
             Element.a = 0.01;
         end
-        Element.shapex = zeros(1,361);
-        Element.shapey = Element.a*cosd(0:360);
-        Element.shapez = Element.a*sind(0:360);
-    case 'RectangularPistonElement'
+        Element.shapex{eindex} = zeros(1,361);
+        Element.shapey{eindex} = Element.a*cosd(0:360);
+        Element.shapez{eindex} = Element.a*sind(0:360);
+    case 4      % Rectangular Piston Element
         if ~isfield(Element,'w')
             if ~isfield(Element,'h')
                 disp('Rectangular piston element width and height not defined in Element.w and Element.h. Using default values of 1 cm.')
@@ -88,10 +96,18 @@ switch Element.type
                 Element.h = Element.w;
             end
         end    
-        Element.shapex = zeros(1,5);
-        Element.shapey = Element.w/2*[-1 1 1 -1 -1];
-        Element.shapez = Element.h/2*[-1 -1 1 1 -1];
-    case 'AnnularPistonElement'
+        Element.shapex{eindex} = zeros(1,5);
+        Element.shapey{eindex} = Element.w/2*[-1 1 1 -1 -1];
+        Element.shapez{eindex} = Element.h/2*[-1 -1 1 1 -1];
+    case 5      % Hexagonal Piston Element
+        if ~isfield(Element,'a')
+            disp('Hexagonal piston element inscribed circle radius not defined in Element.a. Using default radius 1 cm.')
+            Element.a = 0.01;
+        end
+        Element.shapex{eindex} = zeros(1,7);
+        Element.shapey{eindex} = 2/sqrt(3)*Element.a*cosd(30:60:390);
+        Element.shapez{eindex} = 2/sqrt(3)*Element.a*sind(30:60:390);
+    case 6      % Annular Piston Element
         if ~isfield(Element,'a')
             if ~isfield(Element,'b')
                 disp('Annular piston element outer and inner radii not defined in Element.a and Element.b. Using default radii 1 cm and 0.75 cm.')
@@ -112,20 +128,12 @@ switch Element.type
                 Element.b = 3/4*Element.a;
             end
         end
-        Element.shapex = zeros(1,2*361+1);
-        Element.shapey = [Element.a*sind(0:360) Element.b*sind(360:-1:0) Element.a*sind(0)];
-        Element.shapez = [Element.a*cosd(0:360) Element.b*cosd(360:-1:0) Element.a*cosd(0)];
-    case 'HexagonalPistonElement'
-        if ~isfield(Element,'a')
-            disp('Hexagonal piston element inscribed circle radius not defined in Element.a. Using default radius 1 cm.')
-            Element.a = 0.01;
-        end
-        Element.shapex = zeros(1,7);
-        Element.shapey = 2/sqrt(3)*Element.a*cosd(30:60:390);
-        Element.shapez = 2/sqrt(3)*Element.a*sind(30:60:390);
+        Element.shapex{eindex} = zeros(1,2*361+1);
+        Element.shapey{eindex} = [Element.a*sind(0:360) Element.b*sind(360:-1:0) Element.a*sind(0)];
+        Element.shapez{eindex} = [Element.a*cosd(0:360) Element.b*cosd(360:-1:0) Element.a*cosd(0)];
     otherwise
-        disp(['Element type ' Element.type ' not recognized.'])
-        Element.shapex = 0;
-        Element.shapey = 0;
-        Element.shapez = 0;
+        disp(['Element type ' num2str(Element.type(eindex)) ' not recognized.'])
+        Element.shapex{eindex} = 0;
+        Element.shapey{eindex} = 0;
+        Element.shapez{eindex} = 0;
 end

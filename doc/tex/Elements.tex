@@ -10,21 +10,21 @@ Sonar Workbench includes support for the element types listed in Table~\ref{tab:
 	\begin{center}
 		\caption{Included element types}
 		\label{tab:ElementTypes}
-		\begin{tabular}{c|l} 
-			\textbf{Element Type} & \textbf{Type String} \\
+		\begin{tabular}{c|c} 
+			\textbf{Element Type} & \textbf{Enumeration} \\
 			\hline
-			Omnidirectional  & \texttt{`OmnidirectionalElement'} \\
-			Uniform Line & \texttt{`LinearElement'} \\
-			Cosine & \texttt{`CosineElement'} \\
-			Circular Piston & \texttt{`CircularPistonElement'} \\
-			Rectangular Piston & \texttt{`RectangularPistonElement'} \\
-			Annular Piston & \texttt{`AnnularPistonElement'} \\
-			Hexagonal Piston & \texttt{`HexagonalPistonElement'} \\
+			Omnidirectional  & 0 \\
+			Cosine & 1 \\
+			Uniform Line & 2 \\
+			Circular Piston & 3 \\
+			Rectangular Piston & 4 \\
+			Hexagonal Piston & 5 \\
+			Annular Piston & 6 \\
 		\end{tabular}
 	\end{center}
 \end{table}
 
-An element structure holds the parameters that define the element geometry. The element structure must contain the \texttt{.type} field with a string corresponding to the name of a \texttt{.m} file that generates the corresponding element pattern. Table~\ref{tab:ElementTypes} lists the built-in element type strings, but the user can define additional element types by generating their own element pattern generator script with the same interface. 
+An element structure holds the parameters that define the element geometry. The element structure must contain the \texttt{.type} field with an integer corresponding to the name of a \texttt{.m} file that generates the corresponding element pattern. Table~\ref{tab:ElementTypes} lists the built-in element type enumerations.
 
 The field \texttt{.baffle} dictates whether the element should be baffled by the element frame $y$-$z$ plane (e.g. arrays mounted to platforms) or unbaffled (e.g. towed arrays, sonobuoys). The omnidirectional, uniform line, and cosine elements can all be used with and without baffling. The piston elements' element patterns are all derived from equations assuming the piston is mounted in an infinite rigid baffle; therefore, it is recommended that the user set these element's \texttt{.baffle=1} for best results. Diffraction effects caused by finite baffle dimensions are beyond the scope of Sonar Workbench. 
 
@@ -38,7 +38,7 @@ For visualization purposes, fields \texttt{.shapex}, \texttt{.shapey}, and \text
 			\textbf{Element Type} & \textbf{Field} & \textbf{Description} \\
 			\hline
 			\multirow{2}{*}{Uniform Line} & \texttt{.L} & length (m) \\
-			& \texttt{.axis} & aligned axis \texttt{`x'}, \texttt{`y'}, \texttt{`z'} \\
+			& \texttt{.axis} & aligned axis \texttt{0=x}, \texttt{1=y}, \texttt{2=z} \\
 			\hline
 			Circular Piston & \texttt{.a} & radius (m) \\
 			\hline
@@ -55,7 +55,7 @@ For visualization purposes, fields \texttt{.shapex}, \texttt{.shapey}, and \text
 
 Listing~\ref{lst:SampleElement} shows the contents of \texttt{SampleElement.m}, which defines a rectangular piston element.
 
-\lstinputlisting[caption={\texttt{SampleElement.m}},label={lst:SampleElement}]{../../examples/SampleElement.m}
+\lstinputlisting[caption={\texttt{SampleElement.m}},label={lst:SampleElement}]{../../test/SampleElement.m}
 
 The user is free to add additional fields to the element structure for their own purposes. These will be ignored by Sonar Workbench.
 

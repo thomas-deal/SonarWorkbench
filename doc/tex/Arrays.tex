@@ -27,7 +27,7 @@ The field \texttt{.Ne} holds the integer number of elements in the array. The po
 
 When all the array elements are identical, the array structure does not need the \texttt{.eindex} field. An example array structure is found in \texttt{SampleArray.m}, shown in Listing~\ref{lst:SampleArray}.
 
-\lstinputlisting[float,caption={\texttt{SampleArray.m}},label={lst:SampleArray}]{../../examples/SampleArray.m}
+\lstinputlisting[float,caption={\texttt{SampleArray.m}},label={lst:SampleArray}]{../../test/SampleArray.m}
 
 This planar array contains 50 rectangular elements arranged in a grid 5 elements wide by 10 elements high. The geometry is shown in \figname~\ref{fig:SampleArray}, with elements numbered according to their order in the array structure.
 
@@ -45,4 +45,4 @@ For mixed-element arrays, the \texttt{.eindex} field must be a column vector of 
 
 An example is included in \texttt{SampleVSCardioid.m} for a simple vector sensor. The relevant portion is shown in Listing~\ref{lst:SampleVSCardioid}. This vector sensor consists of four elements: a hydrophone and three orthogonal accelerometers. The three accelerometers are identical except for their orientations, so there are a total of two unique elements. The hydrophone is \texttt{Element(1)}, and the accelerometer is \texttt{Element(2)}. The array structure is named \texttt{VS}, and the hydrophone is the first element, followed by the $x$, $y$, and $z$ accelerometers. This makes the first entry in \texttt{.eindex} equal to 1 and the rest of the entries equal to 2. Fields \texttt{.psi} and \texttt{.etheta} rotate elements 3 and 4 from the $x$ axis to the $y$ and $z$ axes, respectively.
 
-\lstinputlisting[firstline=6,lastline=28,caption={\texttt{SampleVSCardioid.m}},label={lst:SampleVSCardioid}]{../../examples/SampleVSCardioid.m}
+\lstinputlisting[firstline=6,lastline=24,caption={\texttt{SampleVSCardioid.m}},label={lst:SampleVSCardioid}]{../../test/SampleVSCardioid.m}

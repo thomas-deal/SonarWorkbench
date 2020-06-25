@@ -14,7 +14,7 @@ function E = LinearElement(Element,lambda,theta,psi,varargin)
 %                         2 = raised cosine baffle
 %               .L      - Linear element length, m
 %               .axis   - Axis element is parallel to before rotation,
-%                         'x','y','z'
+%                         0 = x,1 = y,2 = z
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -55,7 +55,7 @@ else
 end
 %% Check Input Arguments
 L = lambda/2;
-eaxis = 'z';
+eaxis = 2;
 baffle = 0;
 gammar = 0;
 thetar = 0;
@@ -94,11 +94,14 @@ fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
 %% Calculate Element Pattern
 switch eaxis
-    case 'x'
+    case 0
         fL = fx;
-    case 'y'
+    case 1
         fL = fy;
-    case 'z'
+    case 2
+        fL = fz;
+    otherwise
+        disp('LinearElement: invalid setting for Element.axis. Using default z axis.');
         fL = fz;
 end
 E = sinc(fL*L);

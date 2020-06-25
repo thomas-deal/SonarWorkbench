@@ -80,7 +80,7 @@ end
 if length(eindex)==1
 	eindex = eindex*ones(Array.Ne,1);
 end
-if max(eindex) > length(Element)
+if max(eindex) > length(Element.type)
 	disp('PlotArray: Not enough elements defined for non-uniform array, reverting to uniform array of type Element(1)')
 	eindex = ones(Array.Ne,1);
 end
@@ -97,7 +97,7 @@ else
     R = 1.5*max(sqrt(Array.ex.^2+Array.ey.^2+Array.ez.^2));
     if R==0 % Single-element or co-located elements
 		for i=1:Array.Ne
-			R = max(R,max(sqrt(Element(eindex(i)).shapex.^2+Element(eindex(i)).shapey.^2+Element(eindex(i)).shapez.^2)));
+			R = max(R,max(sqrt(Element.shapex{eindex(i)}.^2+Element.shapey{eindex(i)}.^2+Element.shapez{eindex(i)}.^2)));
 		end
     end
 end
@@ -110,9 +110,9 @@ text(ax+0,ay+0,az+1.1,'z','horizontalalignment','center','verticalalignment','mi
 for i=1:Array.Ne
     % Rotate Element Shape
     ROT = RotationMatrix(Array.egamma(i),Array.etheta(i),Array.epsi(i));
-    shapex = ROT(1,1)*Element(eindex(i)).shapex + ROT(1,2)*Element(eindex(i)).shapey + ROT(1,3)*Element(eindex(i)).shapez;
-    shapey = ROT(2,1)*Element(eindex(i)).shapex + ROT(2,2)*Element(eindex(i)).shapey + ROT(2,3)*Element(eindex(i)).shapez;
-    shapez = ROT(3,1)*Element(eindex(i)).shapex + ROT(3,2)*Element(eindex(i)).shapey + ROT(3,3)*Element(eindex(i)).shapez;
+    shapex = ROT(1,1)*Element.shapex{eindex(i)} + ROT(1,2)*Element.shapey{eindex(i)} + ROT(1,3)*Element.shapez{eindex(i)};
+    shapey = ROT(2,1)*Element.shapex{eindex(i)} + ROT(2,2)*Element.shapey{eindex(i)} + ROT(2,3)*Element.shapez{eindex(i)};
+    shapez = ROT(3,1)*Element.shapex{eindex(i)} + ROT(3,2)*Element.shapey{eindex(i)} + ROT(3,3)*Element.shapez{eindex(i)};
     % Plot Element with Amplitude Weight and Element Number
     patch(ax+Array.ex(i)/R+shapex/R,ay+Array.ey(i)/R+shapey/R,az+Array.ez(i)/R+shapez/R,[0.5 0.5 1],'FaceVertexCData',repmat([0.5 0.5 1],length(shapex),1),'FaceAlpha',abs(ew(i)))    
     plot3(ax+Array.ex(i)/R+shapex/R,ay+Array.ey(i)/R+shapey/R,az+Array.ez(i)/R+shapez/R,'k')
