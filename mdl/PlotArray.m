@@ -90,6 +90,7 @@ if ~isempty(hax)
 else
     figure
 end
+hax = gca;
 hold on
 if actualsize
     R = 1;
@@ -101,12 +102,7 @@ else
 		end
     end
 end
-plot3(ax+[0 1],ay+[0 0],az+[0 0],'k')
-text(ax+1.1,ay+0,az+0,'x','horizontalalignment','center','verticalalignment','middle')
-plot3(ax+[0 0],ay+[0 1],az+[0 0],'k')
-text(ax+0,ay+1.1,az+0,'y','horizontalalignment','center','verticalalignment','middle')
-plot3(ax+[0 0],ay+[0 0],az+[0 1],'k')
-text(ax+0,ay+0,az+1.1,'z','horizontalalignment','center','verticalalignment','middle')
+PlotNEDaxes(ax,ay,az,hax)
 for i=1:Array.Ne
     % Rotate Element Shape
     ROT = RotationMatrix(Array.egamma(i),Array.etheta(i),Array.epsi(i));
