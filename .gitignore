@@ -11,3 +11,4 @@
 # Matlab files
 slprj/
 *.slxc
+*.mex*
