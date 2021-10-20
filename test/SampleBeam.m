@@ -9,7 +9,7 @@ end
 if ~exist('theta0','var')
     theta0 = 0;
 end
-ep = exp(-1i*2*pi*cosd(-theta0).*sind(psi0)/lambda*Array.ey).*exp(-1i*2*pi*sind(-theta0)/lambda*Array.ez);
+ep = exp(-1i*2*pi*cosd(-theta0).*sind(psi0)/lambda*Array.ey_m).*exp(-1i*2*pi*sind(-theta0)/lambda*Array.ez_m);
 %% Complex Weights
 Beam.ew = ea.*ep;
 clear ea ep

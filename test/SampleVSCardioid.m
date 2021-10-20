@@ -4,23 +4,25 @@ close all
 path(pathdef)
 addpath(fullfile('..','mdl'))
 %% Define Elements
-Element.type(1,1) = 0;
-Element.baffle(1,1) = 0;
-Element = AddElementShape(Element,1);
-Element.type(1,2) = 1;
-Element.baffle(1,2) = 0;
-Element = AddElementShape(Element,2);
+Element(1).type = 0;
+Element(1).baffle = 0;
+Element(1).params_m = [0;0;0];
+Element(2).type = 1;
+Element(2).baffle = 0;
+Element(2).params_m = [0;0;0];
 %% Define Vector Sensor
 VS.Ne = 4;
-VS.ex = zeros(VS.Ne,1);
-VS.ey = zeros(VS.Ne,1);
-VS.ez = zeros(VS.Ne,1);
-VS.egamma = zeros(VS.Ne,1);
-VS.etheta = [0; 0; 0; 90];
-VS.epsi = [0; 0; 90; 0];
-VS.ax = 0;
-VS.ay = 0;
-VS.az = 0;
+VS.Net = 2;
+VS.Element = Element;
+VS.ex_m = zeros(VS.Ne,1);
+VS.ey_m = zeros(VS.Ne,1);
+VS.ez_m = zeros(VS.Ne,1);
+VS.egamma_deg = zeros(VS.Ne,1);
+VS.etheta_deg = [0; 0; 0; 90];
+VS.epsi_deg = [0; 0; 90; 0];
+VS.ax_m = 0;
+VS.ay_m = 0;
+VS.az_m = 0;
 VS.eindex = [1; 2; 2; 2];
 %% Cardioid Beam Pattern
 % Amplitude Weights
@@ -44,15 +46,15 @@ lambda = 1;
 Beam.psi = psi;
 Beam.theta = theta;
 Beam.lambda = lambda;
-Beam.BP = BeamPattern(VS,Element,Beam,lambda,theta,psi);
+Beam.BP = BeamPattern(VS,Beam,lambda,theta,psi);
 %% Analyze Beam Pattern
 Beam.DI = CalculateDI(theta,psi,Beam.BP);
 [Beam.BWV, Beam.BWH] = BeamWidth3D(theta,psi,Beam.BP);
-PlotArray(VS,Element,Beam)
-Plot3DBP(theta,psi,Beam.BP,[],[],gca,VS.ax,VS.ay,VS.az)
-title(['Cardioid Beam Pattern, ', ...
+PlotArray(VS,Beam)
+Plot3DBP(theta,psi,Beam.BP,[],[],gca,VS.ax_m,VS.ay_m,VS.az_m)
+title(['Cardioid Beam Pattern,', newline ...
 	   '\theta_0 = ' num2str(theta0,'%2.1f') '\circ, ', ...
-	   '\psi_0 = ' num2str(psi0,'%2.1f') '\circ, ', ...
+	   '\psi_0 = ' num2str(psi0,'%2.1f') '\circ,', newline, ...
 	   'DI = ' num2str(Beam.DI,'%2.1f') ' dB, ', ...
 	   'BW = ' num2str(Beam.BWV,'%2.1f') '\circ x ' num2str(Beam.BWH,'%2.1f') '\circ'])
 

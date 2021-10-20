@@ -9,9 +9,10 @@ function E = CosineElement(Element,lambda,theta,psi,varargin) %#ok<INUSL>
 %           Element - Element structure with the following fields
 %               .type   - Element type string
 %               .baffle - Element baffle enumeration
-%                         0 = no baffle
-%                         1 = hard baffle
-%                         2 = raised cosine baffle
+%                         0 = No baffle
+%                         1 = Hard baffle
+%                         2 = Raised cosine baffle
+%                         3 = Torpedo nose baffle
 %           lambda  - Acoustic wavelength, m (unused)
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg

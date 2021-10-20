@@ -16,21 +16,22 @@ SampleBeam
 Beam.psi = psi;
 Beam.theta = theta;
 Beam.lambda = lambda;
-Beam.BP = BeamPattern(Array,Element,Beam,lambda,theta,psi);
+Beam.BP = BeamPattern(Array,Beam,lambda,theta,psi);
 %% Plot
 figure
 subplot(1,2,1)
-PlotArray(Array,Element,Beam,gca)
+PlotArray(Array,Beam,gca)
 Plot3DBP(theta,psi,Beam.BP,1,[],gca)
 set(gca,'SortMethod','ChildOrder')
 subplot(1,2,2)
-PlotArray(Array,Element,Beam,gca)
+PlotArray(Array,Beam,gca)
 Plot3DBP(theta,psi,Beam.BP,2,[],gca)
 set(gca,'SortMethod','ChildOrder')
 %% Finish Plot
+colormap inferno
 set(gcf,'Position',pos)
 %% Save Plot
-set(gcf,'Renderer','painters','PaperPositionMode','auto')
+set(gcf,'Renderer','zbuffer','PaperPositionMode','auto')
 try
     print(gcf,'-dpng','SampleBeam.png')
 catch me

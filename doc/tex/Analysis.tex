@@ -1,14 +1,14 @@
 \section{Analysis}\label{sec:analysis}
 
-Sonar Workbench includes built-in functions to assist with analysis.  Version 1.0 concentrates on array building, conventional beam pattern synthesis, and beam pattern analysis. Planned upgrades include support for adaptive beamforming, element and array radiation impedance, and array gain in anisotropic noise.
+Sonar Workbench includes built-in functions to assist with analysis.  Version 1.0 concentrated on array building, conventional beam pattern synthesis, and beam pattern analysis, and version 2.0 included TEAMS interface support.  Planned upgrades include support for adaptive beamforming, element and array radiation impedance, and array gain in anisotropic noise.
 
 \subsection{Plotting arrays}
 
 The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructions are shown in Listing~\ref{lst:PlotArray}.
 
-\lstinputlisting[firstline=2,lastline=36,caption={\texttt{PlotArray.m}},label={lst:PlotArray}]{../../mdl/PlotArray.m}
+\lstinputlisting[firstline=2,lastline=37,caption={\texttt{PlotArray.m}},label={lst:PlotArray}]{../../mdl/PlotArray.m}
  
-The user must pass the array and element structures as the first two parameters to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the third parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the fourth parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fifth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. 
+The user must pass the array structure as the first parameter to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the second parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the third parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fourth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. 
  
 \subsection{Calculating beam patterns}
 
@@ -24,11 +24,11 @@ BP_{norm}(\lambda,\theta,\psi) = \frac{BP(\lambda,\theta,\psi)}{\sum_{i=1}^{N_e}
 \end{equation}
 For an unsteered beam, this produces an output with amplitude 1 along the maximum response axis. Steering beams off axis can result in a peak beam amplitude less than 1.
 
-Usage instructions for \texttt{BeamPattern.m} are shown in Listing~\ref{lst:BeamPattern}. All input parameters are required. The first three are the array, element, and beam structures. The fourth parameter is the wavelength, $\lambda$. This must be a scalar. 
+Usage instructions for \texttt{BeamPattern.m} are shown in Listing~\ref{lst:BeamPattern}. All input parameters are required. The first two are the array and beam structures. The third parameter is the wavelength, $\lambda$, in meters. This must be a scalar. 
 
 The final two parameters are the elevation and azimuthal angles over which the beam pattern is to be calculated, in degrees. These parameters can be scalars, vectors, or matrices, but they must have compatible dimensions. If both are scalars, the output, \texttt{BP}, will be a scalar. If both are vectors, \texttt{BeamPattern.m} uses the Matlab function \texttt{ndgrid} to calculate a matrix \texttt{BP}, with rows corresponding to $\theta$ and columns corresponding to $\psi$. The user can generate their own matrix inputs using \texttt{[Theta,Psi] = ndgrid(theta,psi);} for vectors \texttt{theta} and \texttt{psi}.
 
-\lstinputlisting[firstline=2,lastline=49,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
+\lstinputlisting[firstline=2,lastline=37,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
 
 \subsection{Plotting beam patterns}
 

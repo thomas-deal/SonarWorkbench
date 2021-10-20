@@ -1,50 +1,38 @@
-function BP = BeamPattern(Array,Element,Beam,lambda,theta,psi)
-%% function BP = BeamPattern(Array,Element,Beam,lambda,theta,psi)
+function BP = BeamPattern(Array,Beam,lambda,theta,psi)
+%% function BP = BeamPattern(Array,Beam,lambda,theta,psi)
 %
 % Computes the beam pattern for an array of elements at coordinates
-% (ex,ey,ez) rotated (egamma,etheta,epsi) from the x axis with complex 
-% element weights ew at wavelength lambda over elevation angles theta and
-% azimuthal angles psi. Supported element types are omnidirectional, 
-% linear, cosine, circular piston, rectangular piston, annular piston, and 
-% hexagonal piston.
+% (ex_m,ey_m,ez_m) rotated (egamma_deg,etheta_deg,epsi_deg) from the x axis
+% with complex element weights ew at wavelength lambda over elevation
+% angles theta and azimuthal angles psi. Supported element types are
+% omnidirectional, linear, cosine, circular piston, rectangular piston,
+% hexagonal piston, and annular piston.
 %
 % Inputs:
 %           Array       - Array structure with the following fields
-%			[required]
-%               .Ne     - Number of elements
-%               .ex     - Element x position vector, m
-%               .ey     - Element y position vector, m
-%               .ez     - Element z position vector, m
-%               .egamma - Element normal azimuth vector, deg
-%               .etheta - Element normal elevation vector, deg
-%               .epsi   - Element normal azimuth vector, deg
-%			[optional]
-%               .eindex - Vector of indices into element structure vector
-%                         to support non-uniform element arrays
-%           Element     - Element structure with the following fields
-%               [required]
-%               .type   - Element pattern generator string
-%                         (name of .m file)
-%               [optional]
-%               .baffle - Element baffle enumeration
-%                         0 = No baffle
-%                         1 = Hard baffle
-%                         2 = Raised cosine baffle
-%               .L      - Linear element length, m
-%               .axis   - Axis linear element is parallel to before
-%                         rotation, 'x','y','z'
-%               .a      - Circular piston radius, m
-%               .w      - Rectangular piston width, m
-%               .h      - Rectangular piston height, m
-%               .a      - Annular piston outer radius, m
-%               .b      - Annular piston inner radius, m
-%               .a      - Hexagonal piston inscribed circle radius, m
+%           [required ]
+%               .Ne         - Number of elements
+%               .Net        - Numer of unique element types
+%               .Element    - Array of length .Net element structures 
+%                             with the following fields
+%                 .type       - Element pattern generator enumeration
+%                 .params_m   - Element shape parameter vector, see element
+%                               pattern files for details
+%               .ex_m       - Element x position vector, m
+%               .ey_m       - Element y position vector, m
+%               .ez_m       - Element z position vector, m
+%               .egamma_deg - Element normal azimuth vector, deg
+%               .etheta_deg - Element normal elevation vector, deg
+%               .epsi_deg   - Element normal azimuth vector, deg
+%           [optional ]
+%               .eindex     - Vector of indices into element structure
+%                             vector to support non-uniform element arrays
 %           Beam        - Beam structure with the following required fields
-%               .ew     - Complex element weight vector
-%           lambda      - Acoustic wavelength, m
-%           theta       - Elevation angle vector or matrix, deg
-%           psi         - Azimuthal angle vector or matrix, deg
-%
+%               .ew         - Complex element weight vector
+%           lambda          - Acoustic wavelength, m
+%           theta           - Elevation angle vector or matrix, deg
+%           psi             - Azimuthal angle vector or matrix, deg
+% 
 % Outputs:
 %           BP          - Beam pattern, complex linear units
 %
@@ -69,7 +57,7 @@ else
     end
 end
 if resize
-    [Theta,Psi] = ndgrid(theta,psi);
+    [Theta,Psi] = ndgrid(theta, psi);
 else
     Theta = theta;
     Psi = psi;
@@ -77,17 +65,17 @@ end
 %% Support for Non-Uniform Arrays
 eindex = ones(Array.Ne,1);
 if isfield(Array,'eindex')
-	if ~isempty(Array.eindex)
-        if length(Array.eindex)~=Array.Ne
-            eindex = repmat(Array.eindex(1),Array.Ne,1);
+    if ~isempty(Array.eindex)
+        if length(Array.eindex)==1
+            eindex = double(Array.eindex(1))*ones(Array.Ne,1) ;
         else
-            eindex = Array.eindex;
+            eindex(1:Array.Ne) = double(Array.eindex(1:Array.Ne));
         end
-	end
+    end
 end
-if max(eindex) > length(Element.type)
-	disp('BeamPattern: Not enough elements defined for non-uniform array, reverting to uniform array of type Element(1)')
-	eindex = ones(Array.Ne,1);
+if max(eindex) > length(Array.Element)
+    disp('BeamPattern: Not enough elements defined for non-uniform array, reverting to uniform array of type Array.Element(1)')
+    eindex = ones(Array.Ne,1);
 end
 %% Spatial Grid
 fx = cosd(-Theta).*cosd(Psi)/lambda;
@@ -101,14 +89,14 @@ eindexlast = NaN;
 BP = complex(zeros(size(Psi)));
 E = complex(ones(size(Psi)));
 for i=1:Array.Ne
-    if(Array.egamma(i)~=gammalast)||(Array.etheta(i)~=thetalast)||(Array.epsi(i)~=psilast)||(eindex(i)~=eindexlast)
-        gammalast = Array.egamma(i);
-        thetalast = Array.etheta(i);
-		psilast = Array.epsi(i);
+    if(Array.egamma_deg(i)~=gammalast)||(Array.epsi_deg(i)~=psilast)||(Array.etheta_deg(i)~=thetalast)||(eindex(i)~=eindexlast)
+        gammalast = Array.egamma_deg(i);
+        thetalast = Array.etheta_deg(i);
+        psilast = Array.epsi_deg(i);
         eindexlast = eindex(i);
-        E = ElementPattern(Element,eindex(i),lambda,Theta,Psi,Array.egamma(i),Array.etheta(i),Array.epsi(i));
+        E = ElementPattern(Array.Element(eindex(i)),lambda,Theta,Psi,Array.egamma_deg(i),Array.etheta_deg(i),Array.epsi_deg(i));
     end
-    BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex(i)).*exp(1i*2*pi*fy*Array.ey(i)).*exp(1i*2*pi*fz*Array.ez(i));
+    BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex_m(i)).*exp(1i*2*pi*fy*Array.ey_m(i)).*exp(1i*2*pi*fz*Array.ez_m(i));
 end
 %% Normalize
-BP = BP/sum(abs(Beam.ew));
+BP = BP/sum(abs(Beam.ew) );

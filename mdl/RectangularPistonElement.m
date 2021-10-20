@@ -8,13 +8,15 @@ function E = RectangularPistonElement(Element,lambda,theta,psi,varargin)
 %
 % Inputs:
 %           Element - Element structure with the following fields
-%               .type   - Element type string
-%               .baffle - Element baffle enumeration
-%                         0 = No baffle
-%                         1 = Hard baffle
-%                         2 = Raised cosine baffle
-%               .w      - Rectangular piston width, m
-%               .h      - Rectangular piston height, m
+%               .type       - Element type string
+%               .baffle     - Element baffle enumeration
+%                             0 = No baffle
+%                             1 = Hard baffle
+%                             2 = Raised cosine baffle
+%                             3 = Torpedo nose baffle
+%               .params_m   - Element shape parameter vector
+%                             params m(1) = Rectangular piston width, m
+%                             params_m(2) = Rectangular piston height, m
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -71,16 +73,12 @@ if nargin==7
         psir = varargin{3};
     end
 end
-if isfield(Element,'w')
-    if ~isempty(Element.w)
-        w = Element.w;
-    end
+if Element.params_m(1)~=0
+    w = Element.params_m(1);
 end
-if isfield(Element,'h')
-    if ~isempty(Element.h)
-        h = Element.h;
-    end
-end
+if Element.params_m(2)~=0
+    h = Element.params_m(2);
+end  
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
         baffle = Element.baffle;

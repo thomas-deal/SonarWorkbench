@@ -10,12 +10,15 @@ function E = HexagonalPistonElement(Element,lambda,theta,psi,varargin)
 %
 % Inputs:
 %           Element - Element structure with the following fields
-%               .type   - Element type string
-%               .baffle - Element baffle enumeration
-%                         0 = No baffle
-%                         1 = Hard baffle
-%                         2 = Raised cosine baffle
-%               .a      - Hexagonal element inscribed circle radius, m
+%               .type       - Element type string
+%               .baffle     - Element baffle enumeration
+%                             0 = No baffle
+%                             1 = Hard baffle
+%                             2 = Raised cosine baffle
+%                             3 = Torpedo nose baffle
+%               .params_m   - Element shape parameter vector
+%                             params_m(1) = Hexagonal element inscribed
+%                                           circle radius, m
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -71,10 +74,8 @@ if nargin==7
         psir = varargin{3};
     end
 end
-if isfield(Element,'a')
-    if ~isempty(Element.a)
-        a = Element.a;
-    end
+if Element.params_m(1)~=0
+    a = Element.params_m(1);
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)

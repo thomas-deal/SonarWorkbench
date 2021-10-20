@@ -11,7 +11,7 @@ SampleArray
 Beam.ew = zeros(Array.Ne,1);
 Beam.lambda = lambda;
 %% Plot
-PlotArray(Array,Element,Beam,[],[])
+PlotArray(Array,Beam,[],[])
 %% Save Plot
 set(gcf,'Position',pos,'Renderer','painters','PaperPositionMode','auto')
 try

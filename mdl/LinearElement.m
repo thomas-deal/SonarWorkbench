@@ -7,14 +7,19 @@ function E = LinearElement(Element,lambda,theta,psi,varargin)
 %
 % Inputs:
 %           Element - Element structure with the following fields
-%               .type   - Element type string
-%               .baffle - Element baffle enumeration
-%                         0 = no baffle
-%                         1 = hard baffle
-%                         2 = raised cosine baffle
-%               .L      - Linear element length, m
-%               .axis   - Axis element is parallel to before rotation,
-%                         0 = x,1 = y,2 = z
+%               .type       - Element type string
+%               .baffle     - Element baffle enumeration
+%                             0 = No baffle
+%                             1 = Hard baffle
+%                             2 = Raised cosine baffle
+%                             3 = Torpedo nose baffle
+%               .params_m   - Element shape parameter vector
+%                             params_m(1) = Linear element length if
+%                                           parallel to x axis, m
+%                             params_m(2) = Linear element length if
+%                                           parallel to y axis, m
+%                             params_m(3) = Linear element length if
+%                                           parallel to z axis, m
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
@@ -71,15 +76,15 @@ if nargin==7
         psir = varargin{3};
     end
 end
-if isfield(Element,'L')
-    if ~isempty(Element.L)
-        L = Element.L;
-    end
-end
-if isfield(Element,'axis')
-    if ~isempty(Element.axis)
-        eaxis = Element.axis;
-    end
+if Element.params_m(1)~=0
+    L = Element.params_m(1);
+    eaxis = 0;
+elseif Element.params_m(2)~=0
+    L = Element.params_m(2);
+    eaxis = 1;
+elseif Element.params_m(3)~=0
+    L = Element.params_m(3);
+    eaxis = 2;
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)

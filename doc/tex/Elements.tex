@@ -24,36 +24,37 @@ Sonar Workbench includes support for the element types listed in Table~\ref{tab:
 	\end{center}
 \end{table}
 
-An element structure holds the parameters that define the element geometry. The element structure must contain the \texttt{.type} field with an integer corresponding to the name of a \texttt{.m} file that generates the corresponding element pattern. Table~\ref{tab:ElementTypes} lists the built-in element type enumerations.
+An element structure holds the parameters that define the element geometry. The element structure must contain the \texttt{.type} field with an integer corresponding to the elements listed in Table~\ref{tab:ElementTypes}, which selects a \texttt{.m} file that generates the corresponding element pattern. Table~\ref{tab:ElementTypes} lists the built-in element type enumerations.
 
 The field \texttt{.baffle} dictates whether the element should be baffled by the element frame $y$-$z$ plane (e.g. arrays mounted to platforms) or unbaffled (e.g. towed arrays, sonobuoys). The omnidirectional, uniform line, and cosine elements can all be used with and without baffling. The piston elements' element patterns are all derived from equations assuming the piston is mounted in an infinite rigid baffle; therefore, it is recommended that the user set these element's \texttt{.baffle=1} for best results. Diffraction effects caused by finite baffle dimensions are beyond the scope of Sonar Workbench. 
 
-For visualization purposes, fields \texttt{.shapex}, \texttt{.shapey}, and \texttt{shapez} contain vectors of element shape coordinates. The script \texttt{AddElementShape.m} generates these vectors for the element types listed in Table~\ref{tab:ElementTypes}. The other fields in the element structure depend on the element type, as listed in Table~\ref{tab:ElementFields}.
+The field \texttt{.params\_m} is a three-element column vector defining the element geometry. A different number of parameters are required to define the shape of different element types. The components of \texttt{.params\_m} for each element type are listed in Table~\ref{tab:ElementParams}. Note that idealized omnidirectional and cosine elements do not use require shape parameters, so all values can be set to 0 for these element types. As indicated by the field name, dimension units are in meters.
 
 \begin{table}[!ht]
 	\begin{center}
-		\caption{Element structure fields}
-		\label{tab:ElementFields}
+		\caption{Element parameter fields}
+		\label{tab:ElementParams}
 		\begin{tabular}{c|c|l} 
-			\textbf{Element Type} & \textbf{Field} & \textbf{Description} \\
+			\textbf{Element Type} & \textbf{Vector Component} & \textbf{Description} \\
 			\hline
-			\multirow{2}{*}{Uniform Line} & \texttt{.L} & length (m) \\
-			& \texttt{.axis} & aligned axis \texttt{0=x}, \texttt{1=y}, \texttt{2=z} \\
+			\multirow{3}{*}{Uniform Line} & \texttt{1} & length along x-axis (m)\\
+			& \texttt{2} & length along y-axis (m)\\
+			& \texttt{3} & length along z-axis (m)\\
 			\hline
-			Circular Piston & \texttt{.a} & radius (m) \\
+			Circular Piston & \texttt{1} & radius (m)\\
 			\hline
-			\multirow{2}{*}{Rectangular Piston} & \texttt{.w} & width (m) \\
-			& \texttt{.h} & height (m) \\
+			\multirow{2}{*}{Rectangular Piston} & \texttt{1} & width (m)\\
+			& \texttt{2} & height (m)\\
 			\hline
-			\multirow{2}{*}{Annular Piston} & \texttt{.a} & outer radius (m) \\
-			& \texttt{.b} & inner radius (m) \\
+			Hexagonal Piston & \texttt{1} & inscribed circle radius (m)\\	
 			\hline
-			Hexagonal Piston & \texttt{.a} & inscribed circle radius (m) \\	
+			\multirow{2}{*}{Annular Piston} & \texttt{1} & outer radius (m)\\
+			& \texttt{2} & inner radius (m)\\
 		\end{tabular}
 	\end{center}
 \end{table}
 
-Listing~\ref{lst:SampleElement} shows the contents of \texttt{SampleElement.m}, which defines a rectangular piston element.
+For a line element, only one of the \texttt{params\_m} components should be nonzero, corresponding to the axis along which the line array is aligned. Listing~\ref{lst:SampleElement} shows the contents of \texttt{SampleElement.m}, which defines a rectangular piston element.
 
 \lstinputlisting[caption={\texttt{SampleElement.m}},label={lst:SampleElement}]{../../test/SampleElement.m}
 
