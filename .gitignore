@@ -6,6 +6,7 @@
 /doc/tex/*
 !/doc/tex/*.tex
 !/doc/tex/*.bib
+!/doc/tex/*.m
 /doc/images/*converted-to.pdf
 
 # Matlab files
