@@ -1,6 +1,6 @@
 %% Setup Path
-path(pathdef)
 addpath(fullfile('..','..','mdl'))
+addpath(fullfile('..','..','resources','Utilities'))
 %% Plot Settings
 LineWidth = 2;
 FontSize = 20;

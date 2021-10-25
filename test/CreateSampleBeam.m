@@ -1,8 +1,7 @@
 clearvars -except psi0 theta0
 close all
 %% Setup Path
-path(pathdef)
-addpath(fullfile('..','mdl'))
+SetPath
 %% Computational Grid
 psi = -180:180;
 theta = -90:90;

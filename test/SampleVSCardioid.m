@@ -1,8 +1,7 @@
 clearvars -except ea psi0 theta0
 close all
 %% Setup Path
-path(pathdef)
-addpath(fullfile('..','mdl'))
+SetPath
 %% Define Elements
 Element(1).type = 0;
 Element(1).baffle = 0;
