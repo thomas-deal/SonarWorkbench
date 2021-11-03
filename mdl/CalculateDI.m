@@ -22,7 +22,6 @@ function DI = CalculateDI(theta,psi,BP)
 %% Normalze
 BP = BP/max(abs(BP(:)));
 %% Integrate
-dpsi = diff(psi(1:2))*pi/180;
-dtheta = diff(theta(1:2))*pi/180;
-D = 4*pi/trapz(trapz(BP.*conj(BP).*sind(Theta+90)*dtheta,1)*dpsi,2);
+F = BP.*conj(BP).*sind(Theta+90);
+D = 4*pi/trapz(theta*pi/180,trapz(psi*pi/180,F,2));
 DI = 10*log10(D);
