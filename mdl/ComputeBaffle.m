@@ -22,27 +22,9 @@ function B = ComputeBaffle(baffle,theta,psi)
 %% Initialize
 B = 1;
 %% Check Input Dimensions
-resize = 0;
-thetaSize = size(theta);
-psiSize = size(psi);
-if min(thetaSize)==1
-    if min(psiSize)==1
-        resize = 1;
-    else
-        disp('ComputeBaffle: Inputs psi and theta have incompatible dimensions')
-        return
-    end
-else
-    if min(psiSize)==1
-        disp('ComputeBaffle: Inputs psi and theta have incompatible dimensions')
-        return
-    end
-end
-if resize
-    [Theta,Psi] = ndgrid(theta,psi);
-else
-    Theta = theta;
-    Psi = psi;
+[Theta, Psi] = GenerateGrid(theta,psi,'ComputeBaffle');
+if any([isnan(Theta(:)) isnan(Psi(:))])
+    return
 end
 %% Create Baffle
 if baffle>0

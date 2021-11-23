@@ -37,5 +37,5 @@ switch Element.type
     case 6
         E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
     otherwise
-        E = CosineElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = OmnidirectionalElement(Element,lambda,theta,psi,gammar,thetar,psir);
 end
