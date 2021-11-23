@@ -56,6 +56,11 @@ else
         return
     end
 end
+if (thetaSize(2) == 1) && (psiSize(2) == 1) && (thetaSize(1) == psiSize(1))
+    resize = 0;
+    % When theta and psi are passed as column vectors of identical size,
+    % treat as coordinate pairs for evaluation, not grid coordinates.
+end
 if resize
     [Theta,Psi] = ndgrid(theta, psi);
 else

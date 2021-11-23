@@ -36,27 +36,9 @@ function E = LinearElement(Element,lambda,theta,psi,varargin)
 %% Initialize
 E = 1;
 %% Check Input Dimensions
-resize = 0;
-thetaSize = size(theta);
-psiSize = size(psi);
-if min(thetaSize)==1
-    if min(psiSize)==1
-        resize = 1;
-    else
-        disp('LinearElement: Inputs psi and theta have incompatible dimensions')
-        return
-    end
-else
-    if min(psiSize)==1
-        disp('LinearElement: Inputs psi and theta have incompatible dimensions')
-        return
-    end
-end
-if resize
-    [Theta,Psi] = ndgrid(theta,psi);
-else
-    Theta = theta;
-    Psi = psi;
+[Theta, Psi] = GenerateGrid(theta,psi,'LinearElement');
+if any([isnan(Theta(:)) isnan(Psi(:))])
+    return
 end
 %% Check Input Arguments
 L = lambda/2;
