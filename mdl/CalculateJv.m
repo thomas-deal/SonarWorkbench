@@ -1,7 +1,7 @@
 function Jv = CalculateJv(theta,psi,BP1,BP2)
 %% function Jv = CalculateJv(theta,psi,BP1,BP2)
 %
-% Calculates the reverb directivity index of beam pattern BP1 and BBP2 
+% Calculates the reverb directivity index of beam pattern BP1 and BP2 
 % defined over elevation angles theta and azimuthal angles psi. It is 
 % assumed that theta spans +/-90 degrees. Any azimuths for which the beam 
 % patterns are not defined are assumed to contribute zero energy to the 
