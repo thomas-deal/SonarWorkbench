@@ -1,5 +1,5 @@
-function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir)
-%% function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir)
+function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,ori)
+%% function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,ori)
 %
 % Rotates a computational grid of azimuth and elevation angles from one
 % frame to another.
@@ -7,9 +7,7 @@ function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir)
 % Inputs:
 %           Theta   - Elevation angle grid, deg
 %           Psi     - Azimuthal angle grid, deg
-%           gammar  - Roll rotation angle, deg
-%           thetar  - Elevation rotation angle, deg
-%           psir    - Azimuthal rotation angle, deg
+%           ori     - Rotation vector, deg
 %
 % Outputs:
 %           Theta   - Rotated elevation angle grid, deg
@@ -20,7 +18,7 @@ function [Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir)
 X0 = cosd(-Theta).*cosd(Psi);
 Y0 = cosd(-Theta).*sind(Psi);
 Z0 = sind(-Theta);
-ROT = RotationMatrix(gammar,thetar,psir)';
+ROT = RotationMatrix(ori(1),ori(2),ori(3))';
 X = ROT(1,1)*X0 + ROT(1,2)*Y0 + ROT(1,3)*Z0;
 Y = ROT(2,1)*X0 + ROT(2,2)*Y0 + ROT(2,3)*Z0;
 Z = ROT(3,1)*X0 + ROT(3,2)*Y0 + ROT(3,3)*Z0;

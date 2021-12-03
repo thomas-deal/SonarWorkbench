@@ -18,12 +18,8 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi)
 %                 .type       - Element pattern generator enumeration
 %                 .params_m   - Element shape parameter vector, see element
 %                               pattern files for details
-%               .ex_m       - Element x position vector, m
-%               .ey_m       - Element y position vector, m
-%               .ez_m       - Element z position vector, m
-%               .egamma_deg - Element normal azimuth vector, deg
-%               .etheta_deg - Element normal elevation vector, deg
-%               .epsi_deg   - Element normal azimuth vector, deg
+%               .ePos_m     - Element position matrix, m
+%               .eOri_deg   - Element normal orientation matrix, deg
 %           [optional ]
 %               .eindex     - Vector of indices into element structure
 %                             vector to support non-uniform element arrays
@@ -87,21 +83,24 @@ fx = cosd(-Theta).*cosd(Psi)/lambda;
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
 %% Compute Beam Pattern
-gammalast = NaN;
-thetalast = NaN;
-psilast = NaN;
+Orilast = NaN(3,1);
 eindexlast = NaN;
 BP = complex(zeros(size(Psi)));
 E = complex(ones(size(Psi)));
 for i=1:Array.Ne
-    if(Array.egamma_deg(i)~=gammalast)||(Array.epsi_deg(i)~=psilast)||(Array.etheta_deg(i)~=thetalast)||(eindex(i)~=eindexlast)
-        gammalast = Array.egamma_deg(i);
-        thetalast = Array.etheta_deg(i);
-        psilast = Array.epsi_deg(i);
+    if(any(Array.eOri_deg(:,i)~=Orilast)) || (eindex(i)~=eindexlast)
+        Orilast = Array.eOri_deg(:,i);
         eindexlast = eindex(i);
-        E = ElementPattern(Array.Element(eindex(i)),lambda,Theta,Psi,Array.egamma_deg(i),Array.etheta_deg(i),Array.epsi_deg(i));
+        E = ElementPattern(Array.Element(eindex(i)), ...
+                           lambda, ...
+                           Theta, ...
+                           Psi, ...
+                           Array.eOri_deg(:,i));
     end
-    BP = BP + Beam.ew(i)*E.*exp(1i*2*pi*fx*Array.ex_m(i)).*exp(1i*2*pi*fy*Array.ey_m(i)).*exp(1i*2*pi*fz*Array.ez_m(i));
+    BP = BP + Beam.ew(i)*E .* ...
+         exp(1i*2*pi*fx*Array.ePos_m(1,i)) .* ...
+         exp(1i*2*pi*fy*Array.ePos_m(2,i)) .* ...
+         exp(1i*2*pi*fz*Array.ePos_m(3,i));
 end
 %% Normalize
 BP = BP/sum(abs(Beam.ew) );

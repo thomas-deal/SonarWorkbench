@@ -21,8 +21,8 @@ function [BWV, BWH] = BeamWidth3D(theta,psi,BP,varargin)
 %           renorm  - Re-normalize beam pattern about peak value
 %
 % Outputs:
-%           BWH      - Horizontal beam width, deg
 %           BWV      - Vertical beam width, deg
+%           BWH      - Horizontal beam width, deg
 %
 
 %% Check Input Arguments

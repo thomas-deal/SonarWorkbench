@@ -1,5 +1,5 @@
-function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
-%% function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
+function E = ElementPattern(Element,lambda,theta,psi,ori)
+%% function E = ElementPattern(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for one of the built-in types at 
 % wavelength lambda over azimuthal angles psi and elevation angles theta.
@@ -10,11 +10,7 @@ function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
-%
-% Optional Inputs:
-%           gammar  - Roll rotation angle, deg
-%           thetar  - Elevation rotation angle, deg
-%           psir    - Azimuthal rotation angle, deg
+%           ori     - Element normal orientation vector, deg
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -23,19 +19,19 @@ function E = ElementPattern(Element,lambda,theta,psi,gammar,thetar,psir)
 %% Calculate
 switch Element.type
     case 0
-        E = OmnidirectionalElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = OmnidirectionalElement(Element,lambda,theta,psi,ori);
     case 1
-        E = CosineElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = CosineElement(Element,lambda,theta,psi,ori);
     case 2
-        E = LinearElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = LinearElement(Element,lambda,theta,psi,ori);
     case 3
-        E = CircularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = CircularPistonElement(Element,lambda,theta,psi,ori);
     case 4
-        E = RectangularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = RectangularPistonElement(Element,lambda,theta,psi,ori);
     case 5
-        E = HexagonalPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = HexagonalPistonElement(Element,lambda,theta,psi,ori);
     case 6
-        E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = AnnularPistonElement(Element,lambda,theta,psi,ori);
     otherwise
-        E = OmnidirectionalElement(Element,lambda,theta,psi,gammar,thetar,psir);
+        E = OmnidirectionalElement(Element,lambda,theta,psi,ori);
 end

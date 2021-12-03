@@ -17,16 +17,11 @@ function PlotArray(Array,varargin)
 %                 .type       - Element pattern generator enumeration
 %                 .params_m   - Element shape parameter vector, see element
 %                               pattern files for details
-%               .ex_m       - Element x position vector, m
-%               .ey_m       - Element y position vector, m
-%               .ez_m       - Element z position vector, m
-%               .egamma_deg - Element normal azimuth vector, deg
-%               .etheta_deg - Element normal elevation vector, deg
-%               .epsi_deg   - Element normal azimuth vector, deg
+%               .ePos_m     - Element position matrix, m
+%               .eOri_deg   - Element normal orientation matrix, deg
 %           [optional ]
-%               .ax_m       - Array x position, m
-%               .ay_m       - Array y position, m
-%               .az_m       - Array z position, m
+%               .aPos_m     - Array position vector, m
+%               .aOri_deg   - Array orientation vector, deg
 %               .eindex     - Vector of indices into element structure 
 %                             vector to support non-uniform element arrays
 %
@@ -41,9 +36,6 @@ function PlotArray(Array,varargin)
 Beam = [];
 hax = [];
 actualsize = 0;
-ax = 0;
-ay = 0;
-az = 0;
 switch nargin
     case 2
         Beam = varargin{1};
@@ -58,18 +50,9 @@ switch nargin
         end
 end
 if isempty(Beam)||~isfield(Beam,'ew')
-    ew = 0.5*ones(Array.Ne,1);
+    ew = 0.5*ones(1,Array.Ne);
 else
     ew = Beam.ew;
-end
-if isfield(Array,'ax_m')
-    ax = Array.ax_m;
-end
-if isfield(Array,'ay_m')
-    ay = Array.ay_m;
-end
-if isfield(Array,'az_m')
-    az = Array.az_m;
 end
 %% Support for Non-Uniform Arrays
 eindex = 1;
@@ -96,31 +79,43 @@ hold on
 if actualsize
     R = 1;
 else
-    R = 1.5*max(sqrt(Array.ex_m.^2+Array.ey_m.^2+Array.ez_m.^2));
+    R = 1.5*max(sqrt(sum(Array.ePos_m.^2,1)));
     if R==0 % Single-element or co-located elements
 		for i=1:Array.Ne
-            [shapex, shapey, shapez] = ElementShape(Array.Element(eindex(i)));
-			R = max(R,max(sqrt(shapex.^2+shapey.^2+shapez.^2)));
+            shape = ElementShape(Array.Element(eindex(i)));
+			R = max(R,max(sqrt(sum(shape.^2,1))));
 		end
     end
 end
-PlotNEDaxes(ax,ay,az,hax)
+PlotNEDaxes(Array.aPos_m,hax)
 for i=1:Array.Ne
     % Rotate Element Shape
-    [shapex0, shapey0, shapez0] = ElementShape(Array.Element(eindex(i)));
-    ROT = RotationMatrix(Array.egamma_deg(i),Array.etheta_deg(i),Array.epsi_deg(i));
-    shapex = ROT(1,1)*shapex0 + ROT(1,2)*shapey0 + ROT(1,3)*shapez0;
-    shapey = ROT(2,1)*shapex0 + ROT(2,2)*shapey0 + ROT(2,3)*shapez0;
-    shapez = ROT(3,1)*shapex0 + ROT(3,2)*shapey0 + ROT(3,3)*shapez0;
+    ROT = RotationMatrix(Array.eOri_deg(1,i), ...
+                         Array.eOri_deg(2,i), ...
+                         Array.eOri_deg(3,i));
+    shape = ROT*ElementShape(Array.Element(eindex(i)));
     % Plot Element with Amplitude Weight and Element Number
-    patch(ax+Array.ex_m(i)/R+shapex/R,ay+Array.ey_m(i)/R+shapey/R,az+Array.ez_m(i)/R+shapez/R,[0.5 0.5 1],'FaceVertexCData',repmat([0.5 0.5 1],length(shapex),1),'FaceAlpha',abs(ew(i)))    
-    plot3(ax+Array.ex_m(i)/R+shapex/R,ay+Array.ey_m(i)/R+shapey/R,az+Array.ez_m(i)/R+shapez/R,'k')
+    patch(Array.aPos_m(1)+Array.ePos_m(1,i)/R+shape(1,:)/R, ...
+          Array.aPos_m(2)+Array.ePos_m(2,i)/R+shape(2,:)/R, ...
+          Array.aPos_m(3)+Array.ePos_m(3,i)/R+shape(3,:)/R, ...
+          [0.5 0.5 1], ...
+          'FaceVertexCData',repmat([0.5 0.5 1],size(shape,2),1), ...
+          'FaceAlpha',abs(ew(i)))    
+    plot3(Array.aPos_m(1)+Array.ePos_m(1,i)/R+shape(1,:)/R, ...
+          Array.aPos_m(2)+Array.ePos_m(2,i)/R+shape(2,:)/R, ...
+          Array.aPos_m(3)+Array.ePos_m(3,i)/R+shape(3,:)/R, ...
+          'k')
     if isfield(Array,'etxt')
         etxt = Array.etxt{i};
     else
         etxt = num2str(i);
     end
-    text(ax+Array.ex_m(i)/R,ay+Array.ey_m(i)/R,az+Array.ez_m(i)/R,etxt,'horizontalalignment','center','verticalalignment','middle')
+    text(Array.aPos_m(1)+Array.ePos_m(1,i)/R, ...
+         Array.aPos_m(2)+Array.ePos_m(2,i)/R, ...
+         Array.aPos_m(3)+Array.ePos_m(3,i)/R, ...
+         etxt, ...
+         'horizontalalignment','center', ...
+         'verticalalignment','middle')
 end
 hold off
 set(gca,'YDir','reverse','ZDir','reverse')

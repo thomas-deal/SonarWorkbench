@@ -1,6 +1,6 @@
 function E = CosineElement(Element,lambda,theta,psi,varargin) %#ok<INUSL>
 %% function E = CosineElement(Element,lambda,theta,psi)
-% function E = CosineElement(Element,lambda,theta,psi,lambda,gammar,thetar,psir)
+% function E = CosineElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for a sensor with cosine directivity over 
 % azimuthal angles psi and elevation angles theta.
@@ -18,9 +18,7 @@ function E = CosineElement(Element,lambda,theta,psi,varargin) %#ok<INUSL>
 %           psi     - Azimuthal angle vector or matrix, deg
 %
 % Optional Inputs:
-%           gammar  - Roll rotation angle, deg
-%           thetar  - Elevation rotation angle, deg
-%           psir    - Azimuthal rotation angle, deg
+%           ori     - Element normal orientation vector, deg
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -35,18 +33,10 @@ if any([isnan(Theta(:)) isnan(Psi(:))])
 end
 %% Check Input Arguments
 baffle = 0;
-gammar = 0;
-thetar = 0;
-psir = 0;
-if nargin==7
+ori = [0;0;0];
+if nargin==5
     if ~isempty(varargin{1})
-        gammar = varargin{1};
-    end
-    if ~isempty(varargin{2})
-        thetar = varargin{2};
-    end
-    if ~isempty(varargin{3})
-        psir = varargin{3};
+        ori = varargin{1};
     end
 end
 if isfield(Element,'baffle')
@@ -55,7 +45,7 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-[Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir);
+[Theta,Psi] = RotateComputationalGrid(Theta,Psi,ori);
 %% Calculate Element Pattern
 E = cosd(Psi).*cosd(Theta);
 %% Baffle Pattern

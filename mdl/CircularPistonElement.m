@@ -1,6 +1,6 @@
 function E = CircularPistonElement(Element,lambda,theta,psi,varargin)
 %% function E = CircularPistonElement(Element,lambda,theta,psi)
-% function E = CircularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir)
+% function E = CircularPistonElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for an ideal circular plane piston of
 % radius a at wavelength lambda over azimuthal angles psi and elevation
@@ -21,9 +21,7 @@ function E = CircularPistonElement(Element,lambda,theta,psi,varargin)
 %           psi     - Azimuthal angle vector or matrix, deg
 %
 % Optional Inputs:
-%           gammar  - Roll rotation angle, deg
-%           thetar  - Elevation rotation angle, deg
-%           psir    - Azimuthal rotation angle, deg
+%           ori     - Element normal orientation vector, deg
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -39,18 +37,10 @@ end
 %% Check Input Arguments
 a = lambda/4;
 baffle = 0;
-gammar = 0;
-thetar = 0;
-psir = 0;
-if nargin==7
+ori = [0;0;0];
+if nargin==5
     if ~isempty(varargin{1})
-        gammar = varargin{1};
-    end
-    if ~isempty(varargin{2})
-        thetar = varargin{2};
-    end
-    if ~isempty(varargin{3})
-        psir = varargin{3};
+        ori = varargin{1};
     end
 end
 if Element.params_m(1)~=0
@@ -62,7 +52,7 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-[Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir);
+[Theta,Psi] = RotateComputationalGrid(Theta,Psi,ori);
 %% Spatial Grid
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;

@@ -1,5 +1,5 @@
-function [shapex, shapey, shapez] = ElementShape(Element)
-%% function [shapex, shapey, shapez] = ElementShape(Element)
+function Shape_m = ElementShape(Element)
+%% function Shape_m = ElementShape(Element)
 %
 % Generates x,y,z coordinates of element face shape for canonical elements.
 % Defaults to single point (0,0,0) if input element type is not recognized.
@@ -28,15 +28,11 @@ function [shapex, shapey, shapez] = ElementShape(Element)
 %                             params_m(2) = Element inner radius, m
 %
 % Outputs:
-%           shapex - x coordinates of element shape, m
-%           shapey - y coordinates of element shape, m
-%           shapez - z coordinates of element shape, m
+%           Shape_m     - NED coordinates of element shape, m
 %
 
 %% Initialize
-shapex = 0;
-shapey = 0;
-shapez = 0;
+Shape_m = [0;0;0];
 %% Check Input
 if ~isfield(Element,'type')
     disp('Element type not defined in Element.type. Exiting.')
@@ -45,21 +41,25 @@ end
 %% Generate Shape
 switch Element.type
     case 0      % Omnidirectional Element
-        % Use default
+        shapex = 0;
+        shapey = 0;
+        shapez = 0;
     case 1      % Cosine Element
-        % Use default
+        shapex = 0;
+        shapey = 0;
+        shapez = 0;
     case 2      % Linear Element
         L = 0.01;
         eaxis = 'z';
         if Element.params_m(1)~=0
             L = Element.params_m(1);
-            eaxis = 'x';
+            eaxis = 0;
         elseif Element.params_m(2)~=0
             L = Element.params_m(2);
-            eaxis = 'y';
+            eaxis = 1;
         elseif Element.params_m(3)~=0
             L = Element.params_m(3);
-            eaxis = 'z';
+            eaxis = 2;
         end
         switch eaxis
             case 0
@@ -121,3 +121,4 @@ switch Element.type
         shapey = 0;
         shapez = 0;
 end
+Shape_m = [shapex;shapey;shapez];

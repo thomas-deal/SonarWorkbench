@@ -1,6 +1,6 @@
 function E = AnnularPistonElement(Element,lambda,theta,psi,varargin)
 %% function E = AnnularPistonElement(Element,lambda,theta,psi)
-% function E = AnnularPistonElement(Element,lambda,theta,psi,gammar,thetar,psir)
+% function E = AnnularPistonElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for an ideal annular plane piston of
 % outer radius a and iner radius b at wavelength lambda over azimuthal
@@ -22,9 +22,7 @@ function E = AnnularPistonElement(Element,lambda,theta,psi,varargin)
 %           psi     - Azimuthal angle vector or matrix, deg
 %
 % Optional Inputs:
-%           gammar  - Roll rotation angle, deg
-%           thetar  - Elevation rotation angle, deg
-%           psir    - Azimuthal rotation angle, deg
+%           ori     - Element normal orientation vector, deg
 %
 % Outputs:
 %           E       - Element pattern, linear units
@@ -41,18 +39,10 @@ end
 a = lambda/4;
 b = lambda/8;
 baffle = 0;
-gammar = 0;
-thetar = 0;
-psir = 0;
-if nargin==7
+ori = 0;
+if nargin==5
     if ~isempty(varargin{1})
-        gammar = varargin{1};
-    end
-    if ~isempty(varargin{2})
-        thetar = varargin{2};
-    end
-    if ~isempty(varargin{3})
-        psir = varargin{3};
+        ori = varargin{1};
     end
 end
 if Element.params_m(1)~=0
@@ -67,13 +57,14 @@ if isfield(Element,'baffle')
     end
 end
 %% Rotate Computational Grid
-[Theta,Psi] = RotateComputationalGrid(Theta,Psi,gammar,thetar,psir);
+[Theta,Psi] = RotateComputationalGrid(Theta,Psi,ori);
 %% Spatial Grid
 fy = cosd(-Theta).*sind(Psi)/lambda;
 fz = sind(-Theta)/lambda;
 %% Calculate Element Pattern
 fr = sqrt(fy.^2+fz.^2);
-E = 2*(a*besselj(1,2*pi*fr*a) - b*besselj(1,2*pi*fr*b))./(2*pi*fr*(a^2-b^2));
+E = 2*(a*besselj(1,2*pi*fr*a) - ...
+       b*besselj(1,2*pi*fr*b))./(2*pi*fr*(a^2-b^2));
 E(fr==0) = 1;
 %% Baffle Pattern
 if baffle>0
