@@ -5,3 +5,5 @@ rm -rf doc
 rm -rf test
 # Remove common resources
 rm -rf resources
+# Remove submodules
+rm .gitmodules
