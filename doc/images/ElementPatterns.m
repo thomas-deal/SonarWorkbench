@@ -39,15 +39,9 @@ AnnElement.params_m = [d/2;3/8*d;0];
 %% Setup Single Element Array
 Array.Ne = 1;
 Array.Net = 1;
-Array.ex_m = 0;
-Array.ey_m = 0;
-Array.ez_m = 0;
-Array.egamma_deg = 0;
-Array.etheta_deg = 0;
-Array.epsi_deg = 0;
-Array.ax_m = 0;
-Array.ay_m = 0;
-Array.az_m = 0;
+Array.ePos_m = [0;0;0];
+Array.eOri_deg = [0;0;0];
+Array.aPos_m = [0;0;0];
 %% Generate Element Patterns
 % Omnidirectional Element
 Array.Element = OmniElement;
@@ -105,43 +99,43 @@ set(gcf,'Position',pos)
 subplot(2,3,1)
 Array.Element = OmniElement;
 PlotArray(Array,OmniBeam,gca,1)
-Plot3DBP(theta,psi,OmniBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,OmniBeam.BP,[],[],gca,Array.aPos_m)
 title('Omnidirectional')
 % Cosine Element
 Array.Element = CosElement;
 subplot(2,3,2)
 PlotArray(Array,CosBeam,gca,1)
-Plot3DBP(theta,psi,CosBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,CosBeam.BP,[],[],gca,Array.aPos_m)
 title('Cosine')
 % Linear Element
 Array.Element = LineElement;
 subplot(2,3,3)
 PlotArray(Array,LineBeam,gca,1)
-Plot3DBP(theta,psi,LineBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,LineBeam.BP,[],[],gca,Array.aPos_m)
 title('Uniform Line')
 % Circular Piston Element
 Array.Element = CircElement;
 subplot(2,4,5)
 PlotArray(Array,CircBeam,gca,1)
-Plot3DBP(theta,psi,CircBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,CircBeam.BP,[],[],gca,Array.aPos_m)
 title('Circular Piston')
 % Rectangular Piston Element
 Array.Element = RectElement;
 subplot(2,4,6)
 PlotArray(Array,RectBeam,gca,1)
-Plot3DBP(theta,psi,RectBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,RectBeam.BP,[],[],gca,Array.aPos_m)
 title('Rectangular Piston')
 % Hexagonal Piston Element
 Array.Element = HexElement;
 subplot(2,4,7)
 PlotArray(Array,HexBeam,gca,1)
-Plot3DBP(theta,psi,HexBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,HexBeam.BP,[],[],gca,Array.aPos_m)
 title('Hexagonal Piston')
 % Annular Piston Element
 Array.Element = AnnElement;
 subplot(2,4,8)
 PlotArray(Array,AnnBeam,gca,1)
-Plot3DBP(theta,psi,AnnBeam.BP,[],[],gca,Array.ax_m,Array.ay_m,Array.az_m)
+Plot3DBP(theta,psi,AnnBeam.BP,[],[],gca,Array.aPos_m)
 title('Annular Piston')
 colormap inferno
 %% Save Plot
