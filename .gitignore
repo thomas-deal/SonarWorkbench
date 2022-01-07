@@ -1,6 +1,7 @@
 # Autosave files
 *~
 *.*~
+*.asv
 
 # Latex intermediate files
 /doc/tex/*
