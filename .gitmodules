@@ -1,3 +1,0 @@
-[submodule "resources/Utilities"]
-	path = resources/Utilities
-	url = git@gitlab.nps.edu:tools/MatlabUtilities.git
