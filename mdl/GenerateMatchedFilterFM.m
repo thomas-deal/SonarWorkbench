@@ -38,3 +38,4 @@ fm = interp1(tp,fm,t);
 s = env.*exp(2i*pi*cumtrapz(fm)/fs);
 %% Generate Matched Filter
 b = conj(flipud(s));
+b = b/sum(abs(b));
