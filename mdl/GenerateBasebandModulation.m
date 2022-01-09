@@ -29,7 +29,7 @@ addRequired(par,'f2',@(x) isnumeric(x) && isscalar(x));
 addRequired(par,'T',@(x) isnumeric(x) && isscalar(x));
 addRequired(par,'fc',@(x) isnumeric(x) && isscalar(x));
 addRequired(par,'fs',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'scheme',@(x) isstring(x) || ischar(x));
+addRequired(par,'scheme',@(x) isnumeric(x) && isscalar(x));
 addParameter(par,'alpha',1,@(x) isnumeric(x) && isscalar(x));
 addParameter(par,'beta',0.9,@(x) isnumeric(x) && isscalar(x) && x < 1);
 parse(par,f1,f2,T,fc,fs,scheme,varargin{:});
@@ -45,13 +45,13 @@ beta = par.Results.beta;
 t = (0:1/fs:T)';
 %% Generate Passband Modulation
 switch scheme
-    case 'lfm'      % Linear
+    case 1          % Linear
         fm = f1 + (f2-f1)/T*t;
-    case 'hfm'      % Hyperbolic
+    case 2          % Hyperbolic
         fm = (1./(1/f1^alpha + (1/f2^alpha-1/f1^alpha)/T*t)).^(1/alpha);
-    case 'efm'      % Exponential
+    case 3          % Exponential
         fm = exp(log(f1) + (log(f2)-log(f1))/T*t);
-    case 'tfm'      % Taylor
+    case 4          % Taylor
         fm = f1 + (f2-f1) * (1/2+1/2*tan(beta*pi*(t/T-1/2))/tan(beta*pi/2));
     otherwise       % Constant
         fm = sqrt(f1*f2)*ones(size(t));
