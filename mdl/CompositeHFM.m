@@ -51,4 +51,4 @@ env = a.*w;
 f1c = 2*(1-gamma)/((2-gamma)/f1 - gamma/f2);
 f2c = 2*(1-gamma)/((2-gamma)/f2 - gamma/f1);
 %% Generate Modulation
-hfm = GenerateBasebandModulation(f1c,f2c,T,fc,fs,'hfm','alpha',1);
+hfm = GenerateBasebandModulation(f1c,f2c,T,fc,fs,2,'alpha',1);
