@@ -1,5 +1,5 @@
 clc
-clear
+clearvars -except NoImages
 close all
 path(pathdef)
 %% Path Settings
@@ -9,9 +9,11 @@ SWBPath = pwd;
 DOCPath = fullfile(SWBPath,'doc');
 IMGPath = fullfile(DOCPath,'images');
 %% Update Images
-cd(IMGPath)
-GenerateAllImages
-close all
+if ~exist('NoImages','var')
+    cd(IMGPath)
+    GenerateAllImages
+    close all
+end
 %% Update Documentation
 texFile = 'SonarWorkbench';
 cd(TEXPath)

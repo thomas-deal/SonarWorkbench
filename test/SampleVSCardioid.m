@@ -17,8 +17,9 @@ VS.ePos_m = zeros(3,VS.Ne,1);
 VS.eOri_deg = [0  0  0  0; ...
                0  0  0 90; ...
                0  0 90  0];
-VS.aPos_m = [0;0;0];
 VS.eindex = [1 2 2 2];
+VS.aPos_m = [0;0;0];
+VS.aOri_deg = [0;0;0];
 %% Cardioid Beam Pattern
 % Amplitude Weights
 if ~exist('ea','var')

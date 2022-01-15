@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{book}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -22,7 +22,6 @@
 	breaklines=true
 }
 
-\graphicspath{{../images/}}
 \renewcommand{\figurename}{Figure}
 \newcommand{\figurenames}{Figures}
 %\newcommand{\figname}{Figure}
@@ -36,23 +35,51 @@
 \newcommand{\eqnname}{Eq.}
 \newcommand{\eqnnames}{Eqs.}
 
+\providecommand{\HUGE}{\Huge}
+\newlength{\drop}
+\newcommand*{\titleGM}{\begingroup
+\drop = 0.1\textheight
+%\vspace*{\baselineskip}
+\vfill
+  \hbox{%
+  \hspace*{0.2\textwidth}%
+  \rule{1pt}{\textheight}
+  \hspace*{0.05\textwidth}%
+  \parbox[b]{0.75\textwidth}{
+  \vbox{%
+    \vspace{\drop}
+    {\noindent\HUGE\bfseries Sonar Workbench\\[0.5\baselineskip]
+               v3.0}\\[2\baselineskip]
+    {\Large\itshape User's Guide}\\[4\baselineskip]
+    {\Large Thomas J Deal, MSc, PhD}\par
+    \vspace{0.5\textheight}
+    {\noindent Naval Undersea Warfare Center, Newport, RI}\\[\baselineskip]
+    }% end of vbox
+    }% end of parbox
+  }% end of hbox
+\vfill
+\null
+\endgroup}
 
 \begin{document}
 
-\title{Sonar Workbench v3.0 User's Guide}
-\author{Thomas J Deal, MSc, PhD}
-\affil{Naval Undersea Warfare Center, Newport, RI}
-\date{\today}
-\maketitle
+\pagestyle{empty}
+\titleGM
+\cleardoublepage
 
-\begin{abstract}
-Sonar Workbench is a suite of Matlab tools for the design and analysis of sonar systems. Version 1.0 focused on array construction and beam pattern construction and analysis. Version 2.0 added TEAMS interface support. Version 3.0 vectorized position and orientation parameters for increased efficiency. Sonar Workbench includes multiple element types, from which the user constructs an array with arbitrary element position and orientation. The user defines complex weights for each element to create a beam with the desired shape, which can be evaluated at any elevation and azimuthal angles, plotted in 3D space, and measured for beam width and directivity index.
-\end{abstract}
+\frontmatter
+\pagestyle{headings}
 
-\newpage
 \tableofcontents
 \listoftables
 \listoffigures
+
+\chapter{Abstract}
+Sonar Workbench is a suite of Matlab tools for the design and analysis of sonar systems. Version 1.0 focused on array construction and beam pattern construction and analysis. Version 2.0 added TEAMS interface support. Version 3.0 vectorized position and orientation parameters for increased efficiency. Sonar Workbench includes multiple element types, from which the user constructs an array with arbitrary element position and orientation. The user defines complex weights for each element to create a beam with the desired shape, which can be evaluated at any elevation and azimuthal angles, plotted in 3D space, and measured for beam width and directivity index.
+
+\cleardoublepage
+
+\mainmatter
 
 \include{Introduction}
 \include{CoordinateSystem}

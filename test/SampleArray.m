@@ -11,5 +11,6 @@ Array.ePos_m = [zeros(1,Array.Ne); ...
                 reshape(repmat((-(Nh-1)/2:(Nh-1)/2)*dz,Nw,1),1,Array.Ne)];
                                         % Element position matrix, m
 Array.eOri_deg = zeros(3,Array.Ne);     % Element oritnation matrix, deg
+Array.eindex = ones(1,Array.Ne);        % Element type index
 Array.aPos_m = zeros(3,1);              % Array position matrix, m
 Array.aOri_deg = zeros(3,1);            % Array orientation matrix, deg

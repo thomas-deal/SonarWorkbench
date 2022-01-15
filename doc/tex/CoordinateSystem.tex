@@ -1,4 +1,4 @@
-\section{Coordinate System and Reference Frames}\label{sec:coord}
+\chapter{Coordinate System and Reference Frames}\label{ch:coord}
 Sonar Workbench uses a right-handed, Cartesian coordinate system known as North-East-Down (NED), as shown in \figname~\ref{fig:NED}. In this coordinate system, the first coordinate, $x$, points north, the second coordinate, $y$, points east, and the third coordinate, $z$, points down. Roll, $\gamma$, is rotation about the $x$ axis, pitch, $\theta$, is rotation about the $y$ axis, and yaw, $\psi$, is rotation about the $z$ axis. The NED coordinate system is ideal for underwater applications, because depth is measured downward from the surface, yaw is measured clockwise from north, and pitch is measured relative to the horizontal plane.
 
 \begin{figure}[!ht]
@@ -23,4 +23,4 @@ The entire array can also be arbitrarily translated and rotated relative to the 
 \end{center}
 \end{figure}
 
-Beam patterns are always computed in the array frame as a function of array azimuth angles $\psi$ and elevation angles $\theta$. Azimuth and elevation angles are measured from the array frame $+x$ axis. A future version will also include the ability to compute beam patterns directly in the body frame. More details about element, array, and body frame alignments will be explained in Sections~\ref{sec:element} and \ref{sec:array}.
+Beam patterns are always computed in the array frame as a function of array azimuth angles $\psi$ and elevation angles $\theta$. Azimuth and elevation angles are measured from the array frame $+x$ axis. A future version will also include the ability to compute beam patterns directly in the body frame. More details about element, array, and body frame alignments will be explained in Chapters~\ref{ch:element} and \ref{ch:array}.

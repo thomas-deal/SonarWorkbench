@@ -1,8 +1,8 @@
-\section{Elements}\label{sec:element}
+\chapter{Elements}\label{ch:element}
 
 The transducer element is the fundamental building block for arrays and the starting point for analysis in Sonar Workbench. For the purpose of generating and analyzing beam patterns, specific electromechanical transduction methods do not need to be modeled; instead, the element's acoustic properties can be captured by modeling vibrations of the element's wetted surface. Hereafter, references to an element's geometry refer to the geometry of the element's wetted surface or face. Sonar Workbench treats each element as a uniformly vibrating surface, which is to say that it only models each surface's fundamental mode of vibration. Analyzing element response requires first, defining the element geometry, and second, evaluating that geometry at a specific acoustic wavelength to produce an element pattern.
 
-\subsection{Element definition}
+\section{Element definition}
 
 Sonar Workbench includes support for the element types listed in Table~\ref{tab:ElementTypes}. 
 
@@ -60,7 +60,7 @@ For a line element, only one of the \texttt{params\_m} components should be nonz
 
 The user is free to add additional fields to the element structure for their own purposes. These will be ignored by Sonar Workbench.
 
-\subsection{Element patterns}
+\section{Element patterns}
 
 Element geometry, coupled with an acoustic wavelength, defines the element pattern. The element pattern is the element's far-field directional response as a function of wavelength, azimuth and elevation, and it can be thought of as a spatial filter. Elements are assumed to be transducers, capable of transmitting and receiving sound, so there is no distinction between transmit and receive element patterns. 
 
@@ -87,7 +87,7 @@ Element patterns are normalized such that they have unity gain along their maxim
 
 \begin{sidewaysfigure}[!ht]
 \begin{center}
-\includegraphics[width=8in]{ElementPatterns}
+\includegraphics[width=7.75in]{ElementPatterns}
 \caption{\label{fig:ElementPatterns}Element patterns for included element types (magnitude in dB)}
 \end{center}
 \end{sidewaysfigure}

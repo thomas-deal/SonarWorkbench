@@ -1,16 +1,15 @@
-\section{Analysis}\label{sec:analysis}
+\chapter{Analysis}\label{ch:analysis}
 
 Sonar Workbench includes built-in functions to assist with analysis.  Versions 1.0-3.0 concentrated on array building, conventional beam pattern synthesis, and beam pattern analysis.  Planned upgrades include support for adaptive beamforming, element and array radiation impedance, and array gain in anisotropic noise.
 
-\subsection{Plotting arrays}
+\section{Plotting arrays}
 
-The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructions are shown in Listing~\ref{lst:PlotArray}.
+The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructions are shown in Listing~\ref{lst:PlotArray}. The user must pass the array structure as the first parameter to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the second parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the third parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fourth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. 
 
+\newpage
 \lstinputlisting[firstline=2,lastline=33,caption={\texttt{PlotArray.m}},label={lst:PlotArray}]{../../mdl/PlotArray.m}
  
-The user must pass the array structure as the first parameter to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the second parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the third parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fourth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. 
- 
-\subsection{Calculating beam patterns}
+\section{Calculating beam patterns}
 
 \texttt{BeamPattern.m} calculates the beam pattern for wavelength $\lambda$, elevation angles $\theta$, and azimuthal angles $\psi$ as
 \begin{equation}
@@ -30,7 +29,7 @@ The final two parameters are the elevation and azimuthal angles over which the b
 
 \lstinputlisting[firstline=2,lastline=34,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
 
-\subsection{Plotting beam patterns}
+\section{Plotting beam patterns}
 
 The function \texttt{Plot3DBP.m} plots the three dimensional beam magnitude with decibel scaling. Usage instructions are shown in Listing~\ref{lst:Plot3DBP}. The three required inputs are elevation and azimuthal angle vectors, $\theta$ and $\psi$ in degrees, and the beam pattern matrix. 
 
@@ -47,19 +46,19 @@ The final optional inputs allow the beam to be offset according to the array pos
 \clearpage
 \begin{sidewaysfigure}[!ht]
 \begin{center}
-\includegraphics[width=8in]{SampleBeam}
+\includegraphics[width=7.75in]{SampleBeam}
 \caption{\label{fig:SampleBeam}Example beam pattern for rectangular planar array}
 \end{center}
 \end{sidewaysfigure}
 
 \clearpage
-\subsection{Calculating beam width}
+\section{Calculating beam width}
 
 Beam width is the angular span over which the beam magnitude is within 3 dB of its peak value. Sonar Workbench contains two functions to calculate beam width: \texttt{BeamWidth.m} for 2D beams, which computes beam width in a single plane, and \texttt{BeamWidth3D.m} for 3D beams, which computes vertical and horizontal beam widths. Usage is shown in Listings~\ref{lst:BeamWidth} and \ref{lst:BeamWidth3D}.
 
-\lstinputlisting[firstline=2,lastline=20,caption={\texttt{BeamWidth.m}},label={lst:BeamWidth}]{../../mdl/BeamWidth.m}
+\lstinputlisting[firstline=2,lastline=21,caption={\texttt{BeamWidth.m}},label={lst:BeamWidth}]{../../mdl/BeamWidth.m}
 
-\lstinputlisting[firstline=2,lastline=25,caption={\texttt{BeamWidth3D.m}},label={lst:BeamWidth3D}]{../../mdl/BeamWidth3D.m}
+\lstinputlisting[firstline=2,lastline=26,caption={\texttt{BeamWidth3D.m}},label={lst:BeamWidth3D}]{../../mdl/BeamWidth3D.m}
 
 There are two required parameters for \texttt{BeamWidth.m}. The first, \texttt{ang}, is a vector of angles in degrees over which the beam pattern slice is defined, and the second, \texttt{bp}, is the beam pattern at those angles, in linear units. The user can assist the function in locating the correct peak value to search around by specifying an approximate peak angle in the first optional parameter, \texttt{ang0}. The final optional parameter, \texttt{renorm}, instructs the function to re-normalize the beam pattern to have a peak magnitude of 0 dB before searching for the -3 dB angles. This can be useful for a steered beam whose peak magnitude is less than 0 dB. 
 
@@ -67,7 +66,7 @@ The output, \texttt{BW}, is the measured beam width in degrees. The function att
 
 \texttt{BeamWidth3D} has similar usage but with expanded support for an additional dimension. Its first three parameters are required, and correspond to angle vectors $\theta$ and $\psi$ in degrees and beam pattern matrix \texttt{BP} in linear units. The first two optional parameters, \texttt{theta0} and \texttt{psi0} serve the same purpose as \texttt{ang0} in \texttt{BeamWidth.m} for the elevation and azimuthal angles, respectively. The final optional parameter, \texttt{renorm}, is identical to that parameter in \texttt{BeamWidth.m}. There are two outputs, \texttt{BWV} and \texttt{BWH}, which are the vertical and horizontal beam widths in degrees, respectively. For the example beam in \figname~\ref{fig:SampleBeam}, the vertical and horizontal beam widths are calculated to be 26$^\circ$ and 25.6$^\circ$.
 
-\subsection{Calculating directivity index}
+\section{Calculating directivity index}
 
 Directivity Index (DI) is a measure of a beam's ability to filter spatially isotropic noise. It is the ratio of the noise level received by an omnidirectional sensor to the noise level received by the beam, expressed in dB. It is calculated from the Directivity (D) according to
 \begin{equation}
@@ -82,4 +81,4 @@ D(\lambda) = \frac{4\pi}{\int_0^{\pi}\int_0^{2\pi}|BP(\lambda,\theta,\psi)|^2d\p
 
 There are three required parameters. The first two are angle vectors $\theta$ and $\psi$ in degrees, and the third is the beam pattern matrix \texttt{BP} in linear units. For best results, $\theta$ should span 180$^\circ$ vertically, and $\psi$ should span 360$^\circ$ horizontally. If instead, the beam pattern is defined as a subset of these angles, \texttt{CalculateDI.m} assumes the beam pattern value is exactly zero outside the defined region. There is a single output, \texttt{DI}, which is the directivity index in dB.
 
-\lstinputlisting[firstline=2,lastline=17,caption={\texttt{CalculateDI.m}},label={lst:CalculateDI}]{../../mdl/CalculateDI.m}
+\lstinputlisting[firstline=2,lastline=18,caption={\texttt{CalculateDI.m}},label={lst:CalculateDI}]{../../mdl/CalculateDI.m}
