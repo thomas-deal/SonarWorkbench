@@ -38,7 +38,7 @@ if baffle>0
             B(Phi<=90) = 1;
             B(Phi>135) = eps;
         case 3    % Torpedo nose baffle
-            B = 1/2+1.2*cosd(4*(Phi-45));
+            B = 1/2+1/2*cosd(4*(Phi-45));
             B(Phi<=45) = 1;
             B(Phi>90) = eps;
     end
