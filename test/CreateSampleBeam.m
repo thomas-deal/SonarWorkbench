@@ -4,7 +4,7 @@ close all
 SetPath
 %% Computational Grid
 psi = -180:180;
-theta = -90:90;
+theta = (-90:90)';
 %% Design Parameters
 lambda = 0.04;      % Acoustic wavelength, m
 %% Define Element, Array, and Beam

@@ -97,7 +97,7 @@ shading interp
 colorbar('location','southoutside','orientation','horizontal')
 axis equal
 axis off
-colormap jet
+colormap(cmocean('thermal'))
 caxis(dBScale)
 set(gca,'zdir','reverse','ydir','reverse')
 view([60 15])
