@@ -1,20 +1,27 @@
-function PlotNEDaxes(aPos_m,varargin)
-%% function PlotNEDaxes(aPos_m)
-% function PlotNEDaxes(aPos_m,hax)
+function PlotNEDaxes(Pos_m,Ori_deg,varargin)
+%% function PlotNEDaxes(Pos_m,Ori_deg)
+% function PlotNEDaxes(Pos_m,Ori_deg,hax)
 %
 % Plots orthogonal x, y, and z axes for a NED coordinate frame
 %
 % Inputs:
-%           aPos_m  - Array position vector, m
+%           Pos_m   - Frame position vector, m
+%           Ori_deg - Frame orientation vector, deg
 %
 % Optional Inputs:
 %           hax     - Handle to axis for plotting in an existing figure
+%
 
 %% Check Inputs
 hax = [];
-if nargin==2
+if nargin==3
     hax = varargin{1};
 end
+%% Rotate Axes
+ROT = RotationMatrix(Ori_deg);
+x = ROT*[0 1;0 0;0 0];
+y = ROT*[0 0;0 1;0 0];
+z = ROT*[0 0;0 0;0 1];
 %% Plot
 if ~isempty(hax)
     axes(hax)
@@ -22,12 +29,12 @@ else
     figure
 end
 hold on
-plot3(aPos_m(1)+[0 1],aPos_m(2)+[0 0],aPos_m(3)+[0 0],'k')
-text(aPos_m(1)+1.1,aPos_m(2)+0,aPos_m(3)+0,'x', ...
+plot3(Pos_m(1)+x(1,:),Pos_m(2)+x(2,:),Pos_m(3)+x(3,:),'k')
+text(Pos_m(1)+1.1*x(1,2),Pos_m(2)+1.1*x(2,2),Pos_m(3)+1.1*x(3,2),'x', ...
      'horizontalalignment','center','verticalalignment','middle')
-plot3(aPos_m(1)+[0 0],aPos_m(2)+[0 1],aPos_m(3)+[0 0],'k')
-text(aPos_m(1)+0,aPos_m(2)+1.1,aPos_m(3)+0,'y', ...
+plot3(Pos_m(1)+y(1,:),Pos_m(2)+y(2,:),Pos_m(3)+y(3,:),'k')
+text(Pos_m(1)+1.1*y(1,2),Pos_m(2)+1.1*y(2,2),Pos_m(3)+1.1*y(3,2),'y', ...
      'horizontalalignment','center','verticalalignment','middle')
-plot3(aPos_m(1)+[0 0],aPos_m(2)+[0 0],aPos_m(3)+[0 1],'k')
-text(aPos_m(1)+0,aPos_m(2)+0,aPos_m(3)+1.1,'z', ...
+plot3(Pos_m(1)+z(1,:),Pos_m(2)+z(2,:),Pos_m(3)+z(3,:),'k')
+text(Pos_m(1)+1.1*z(1,2),Pos_m(2)+1.1*z(2,2),Pos_m(3)+1.1*z(3,2),'z', ...
      'horizontalalignment','center','verticalalignment','middle')

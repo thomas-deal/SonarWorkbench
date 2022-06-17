@@ -75,21 +75,9 @@ else
         BP = BP/abs(BP(i0,j0));
     end
 end
-%% Rotate Unit Sphere Slices to (theta0,psi0)
-phi = -180:180;
-Nphi = 361;
-ROT = RotationMatrix(0,theta0,psi0);
-Vslice = ROT*[cosd(phi);zeros(1,Nphi);sind(-phi)];
-Vslice = Vslice./repmat(sqrt(sum(Vslice.^2,1)),3,1);
-Vtheta = -asind(Vslice(3,:));
-Vpsi = atan2d(Vslice(2,:),Vslice(1,:));
-Hslice = ROT*[cosd(phi);sind(phi);zeros(1,Nphi)];
-Hslice = Hslice./repmat(sqrt(sum(Hslice.^2,1)),3,1);
-Htheta = -asind(Hslice(3,:));
-Hpsi = atan2d(Hslice(2,:),Hslice(1,:));
 %% Get Vertical Beam Width
-slice = interp2(theta,psi,BP,Vtheta,Vpsi);
+[slice,phi] = ExtractBeamSlice(theta,psi,BP,[90;theta0;psi0]);
 BWV = BeamWidth(phi,slice,0);
 %% Get Horizontal Beam Width
-slice = interp2(theta,psi,BP,Htheta,Hpsi);
+[slice,phi] = ExtractBeamSlice(theta,psi,BP,[0;theta0;psi0]);
 BWH = BeamWidth(phi,slice,0);
