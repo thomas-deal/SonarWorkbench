@@ -5,8 +5,8 @@ function [BPslice,phi] = ExtractBeamSlice(theta,psi,BP,Ori)
 % the specified orientation. Ori(2:3) specifies the center of the  slice in
 % the (theta,psi) plane, and Ori(1) sets the angle of the slice within that
 % plane, measured clockwise from the positive psi axis. For a vertical 
-% slice (phi=theta), set Ori(1) = 90, and for a horizontal slice (phi=psi),
-% set Ori(1) = 0.
+% slice (phi=theta), set Ori(1) = -90, and for a horizontal slice 
+% (phi=psi), set Ori(1) = 0.
 %
 % Inputs:
 %           theta   - Elevation angle vector, deg
@@ -24,7 +24,7 @@ function [BPslice,phi] = ExtractBeamSlice(theta,psi,BP,Ori)
 phi = -180:180;
 Nphi = 361;
 ROT = RotationMatrix(Ori);
-slice = ROT*[cosd(phi);zeros(1,Nphi);sind(-phi)];
+slice = ROT*[cosd(phi);sind(phi);zeros(1,Nphi)];
 slice = slice./repmat(sqrt(sum(slice.^2,1)),3,1);
 Rtheta = -asind(slice(3,:));
 Rpsi = atan2d(slice(2,:),slice(1,:));
