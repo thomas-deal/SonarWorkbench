@@ -76,7 +76,7 @@ else
     end
 end
 %% Get Vertical Beam Width
-[slice,phi] = ExtractBeamSlice(theta,psi,BP,[90;theta0;psi0]);
+[slice,phi] = ExtractBeamSlice(theta,psi,BP,[-90;theta0;psi0]);
 BWV = BeamWidth(phi,slice,0);
 %% Get Horizontal Beam Width
 [slice,phi] = ExtractBeamSlice(theta,psi,BP,[0;theta0;psi0]);
