@@ -1,8 +1,10 @@
 %% Load Array Definition
 SampleArray
 %% Amplitude Weights
-ea = repmat(chebwin(Nw,30)',1,Nh) .* ...
-     reshape(repmat(chebwin(Nh,30)',Nw,1),1,Array.Ne);
+hweights = [0.3185 0.7683 1.0000 0.7683 0.3185];
+vweights = [0.2575 0.4300 0.6692 0.8780 1.0000 1.0000 0.8780 0.6692 0.4300 0.2575];
+ea = repmat(hweights,1,Nh) .* ...
+     reshape(repmat(vweights,Nw,1),1,Array.Ne);
 % Phase Weights
 if ~exist('psi0','var')
     psi0 = 0;
