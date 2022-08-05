@@ -5,16 +5,17 @@ function j = sbesselj(nu,z)
 %
 
 %% Calculate
-j = sqrt(pi/2./z).*besselj(nu+1/2,z);
+j = sqrt(pi/2./abs(z)).*besselj(nu+1/2,z);
 % Asymptotic result for small values
 smallz = 1e-10;
+idx = abs(z)<smallz;
 if nu==0
-    j(z<smallz) = 1;
+    j(idx) = 1;
 else
     if mod(nu,1)    % noninteger
-        j(z<smallz) = 0;
+        j(idx) = 0;
     else            % integer
-        j(z<smallz) = z(z<smallz).^nu/fact2(nu);
+        j(idx) = z(idx).^nu/fact2(nu);
     end
 end
 end

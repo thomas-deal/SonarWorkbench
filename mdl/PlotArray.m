@@ -3,6 +3,7 @@ function PlotArray(Array,varargin)
 % function PlotArray(Array,Beam)
 % function PlotArray(Array,Beam,hax)
 % function PlotArray(Array,Beam,hax,actualsize)
+% function PlotArray(Array,Beam,hax,actualsize,color)
 %
 % Plots the physical layout of an array, including amplitude shading if a
 % Beam is defined.
@@ -30,12 +31,14 @@ function PlotArray(Array,varargin)
 %               .ew     - Complex element weight vector
 %           hax         - Handle to axis for plotting in an existing figure
 %           actualsize  - Plot array elements without scaling
+%           color       - RGB triple with elements in [0,1]
 %
 
 %% Check Input Arguments
 Beam = [];
 hax = [];
 actualsize = 0;
+color = [0.5 0.5 1];
 switch nargin
     case 2
         Beam = varargin{1};
@@ -47,6 +50,18 @@ switch nargin
         hax = varargin{2};
         if ~isempty(varargin{3})
             actualsize = varargin{3};
+        end
+    case 5
+        Beam = varargin{1};
+        hax = varargin{2};
+        if ~isempty(varargin{3})
+            actualsize = varargin{3};
+        end
+        if ~isempty(varargin{4})
+            tmp = varargin{4};
+            if length(tmp) == 3
+                color = tmp(:)';
+            end 
         end
 end
 if isempty(Beam)||~isfield(Beam,'ew')
@@ -105,8 +120,8 @@ for i=1:Array.Ne
     patch(shape(1,:), ...
           shape(2,:), ...
           shape(3,:), ...
-          [0.5 0.5 1], ...
-          'FaceVertexCData',repmat([0.5 0.5 1],size(shape,2),1), ...
+          color, ...
+          'FaceVertexCData',repmat(color,size(shape,2),1), ...
           'FaceAlpha',abs(ew(i)))    
     plot3(shape(1,:), ...
           shape(2,:), ...
