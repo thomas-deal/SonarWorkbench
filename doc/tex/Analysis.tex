@@ -4,10 +4,10 @@ Sonar Workbench includes built-in functions to assist with analysis.  Versions 1
 
 \section{Plotting arrays}
 
-The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructions are shown in Listing~\ref{lst:PlotArray}. The user must pass the array structure as the first parameter to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the second parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the third parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fourth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. 
+The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructions are shown in Listing~\ref{lst:PlotArray}. The user must pass the array structure as the first parameter to \texttt{PlotArray.m}. This will produce a physical plot of the array, as shown in \figname~\ref{fig:SampleArray}. There are three optional inputs to \texttt{PlotArray.m}. The user can enter empty brackets \texttt{[]} for any optional parameters that are not needed. If the user inputs a beam structure in the second parameter, the elements will be filled with a solid color whose opacity is proportional to the amplitude weights, as shown in \figname~\ref{fig:SampleBeam}. To plot the array in an existing figure axis, pass a handle to that axis as the third parameter, \texttt{hax}. The Matlab function \texttt{gca} can be used to specify the current axis. The fourth parameter lets the user plot the array scaled to dimensions of 1 unit = 1 meter. This is helpful if the array is to be overlaid on a user-generated plot of its host platform. The fifth and final parameter lets the user specify the color to use for each element. This input is a 3-element normalized vector containing red, green, and blue color components.
 
 \newpage
-\lstinputlisting[firstline=2,lastline=33,caption={\texttt{PlotArray.m}},label={lst:PlotArray}]{../../mdl/PlotArray.m}
+\lstinputlisting[firstline=2,lastline=35,caption={\texttt{PlotArray.m}},label={lst:PlotArray}]{../../mdl/PlotArray.m}
  
 \section{Calculating beam patterns}
 
@@ -25,11 +25,59 @@ For an unsteered beam, this produces an output with amplitude 1 along the maximu
 
 Usage instructions for \texttt{BeamPattern.m} are shown in Listing~\ref{lst:BeamPattern}. All input parameters are required. The first two are the array and beam structures. The third parameter is the wavelength, $\lambda$, in meters. This must be a scalar. 
 
-The final two parameters are the elevation and azimuthal angles over which the beam pattern is to be calculated, in degrees. These parameters can be scalars, vectors, or matrices, but they must have compatible dimensions. If both are scalars, the output, \texttt{BP}, will be a scalar. If both are vectors, \texttt{BeamPattern.m} uses the Matlab function \texttt{ndgrid} to calculate a matrix \texttt{BP}, with rows corresponding to $\theta$ and columns corresponding to $\psi$. The user can generate their own matrix inputs using \texttt{[Theta,Psi] = ndgrid(theta,psi);} for vectors \texttt{theta} and \texttt{psi}.
+The final two parameters are the elevation and azimuthal angles over which the beam pattern is to be calculated, in degrees. These parameters can be scalars, vectors, or matrices, but they must have compatible dimensions. If both are scalars, the output, \texttt{BP}, will be a scalar. If both are column vectors of the same length or matrices with identical dimensions, \texttt{BeamPattern.m} treats them as coordinate pairs at which to evaluate the beam pattern. If \texttt{theta} is a column vector and \texttt{psi} is a row vector, \texttt{BeamPattern.m} uses the Matlab function \texttt{ndgrid} to calculate a matrix \texttt{BP}, with rows corresponding to constant $\theta$ and columns corresponding to constant $\psi$. The user can generate their own matrix inputs using \texttt{[Theta,Psi] = ndgrid(theta,psi);} for vectors \texttt{theta} and \texttt{psi}.
 
 \lstinputlisting[firstline=2,lastline=34,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
 
-\section{Plotting beam patterns}
+\section{Extracting 2D slices from 3D beam patterns}
+
+The function \texttt{ExtractBeamSlice.m} extracts a 2D slice from a 3D beam pattern by extracting all values that lie in a plane with user-specified orientation. Common usage includes extracting horizontal and vertical beam patterns for generating 2D plots, but the plane can also be rotated to different angles between horizontal and vertical. 
+
+Listing~\ref{lst:ExtractBeamSlice} shows usage instructions for \texttt{ExtractBeamSlice.m}. All input parameters are required. The first two are the vertical and horizontal angles over which the beam pattern is evaluated, and the third input is the 3D beam pattern. The third input is a three-element orientation vector containing the roll, pitch, and yaw angles (in degrees) that rotate the default horizontal plane to the desired orientation. The first element of \texttt{Ori} is the roll parameter. Set this value to 0 for a horizontal slice and set it to -90 for a vertical slice. Other rotational angles can be useful, e.g. 60 for measuring the beam pattern of a haxagonal piston element along one of its axes of symmetry. The final two elements of \texttt{Ori} are the elevation and azimuth coordinates of the 2D slice's angular origin. Setting these elements to $\theta_0$ and $\psi_0$ places the center of the extracted 2D slice at a steered beam's maximum response axis. \texttt{ExtractBeamSlice.m} returns a vector of complex beam pattern values, \texttt{BPslice},  and a vector of angles, \texttt{phi}.
+
+\lstinputlisting[firstline=2,lastline=21,caption={\texttt{ExtractBeamSlice.m}},label={lst:ExtractBeamSlice}]{../../mdl/ExtractBeamSlice.m}
+
+Since \texttt{ExtractBeamSlice.m} outputs values defined over an angular span with fixed 1$^\circ$ spacing, and it uses interpolation to estimate values from coordinates that do not map directly to coordinates in the 3D beam pattern, it is best suited for visualization when a 3D beam pattern has already been calculated. For more precise results, evaluate \texttt{BeamPattern.m} at the desired $\theta$ and $\psi$ corresponding to the plane of interest directly. 
+
+\section{Plotting 2D beam patterns}
+
+The function \texttt{Plot2DBP.m} plots the two dimensional beam pattern magnitude with decibel scaling. Listing~\ref{lst:Plot2DBP} shows usage instructions. The two required inputs are the angle vector, $\phi$ in degrees, and the beam pattern vector.
+
+The first optional input, \texttt{PlotType} selects from two different rectangular plots and two different polar plots, as listed in Table~\ref{tab:Plot2DBPlotType}. The first two plot types are suitable for displaying horizontal beam pattern slices or slices cut through any plane, while the third and fourth plot types are suitable for vertical beam pattern slices, according to the coordinate conventions used by Sonar Workbench. \figurename~\ref{fig:Plot2DBPexamples} shows examples of each plot type for 2D horizontal and vertical slices through the rectangular planar array's 3D beam pattern.
+
+\begin{table}[!ht]
+	\begin{center}
+		\caption{\texttt{PlotType} options for \texttt{Plot2DBP.m}}
+		\label{tab:Plot2DBPlotType}
+		\begin{tabular}{c|l} 
+			\texttt{PlotType} & \textbf{Description} \\
+			\hline
+			1 & Rectangular plot, 0$^\circ$ up, $+\phi$ right \\
+			2 & Polar plot, 0$^\circ$ up, $+\phi$ clockwise \\
+			3 & Rectangular plot, 0$^\circ$ right, $+\phi$ up \\
+			4 & Polar plot, 0$^\circ$ right, $+\phi$ counterclockwise \\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+The second optional input, \texttt{dBScale}, is a two-element vector with the minimum and maximum magnitudes in dB. The default values are -40 and 0 dB. It is common to use 0 dB for the maximum value, since the beam pattern is normalized by default.
+
+The third optional input is the axis handle, \texttt{hax}, in which to plot the beam. This input has the same functionality as it does in \texttt{PlotArray.m}, and it allows the beam to be plotted with the array on the same axis. Matlab function \texttt{gca} can be used to specify the current axis.
+
+\texttt{Plot2DBP.m} returns a single optional output, which is a handle to the plotted data. This allows the user to change the plot's appearance, such as line color and weight or marker type and size.
+
+\lstinputlisting[firstline=2,lastline=28,caption={\texttt{Plot2DBP.m}},label={lst:Plot2DBP}]{../../mdl/Plot2DBP.m}
+
+\clearpage
+\begin{sidewaysfigure}[!ht]
+\begin{center}
+\includegraphics[width=7.75in]{Plot2DBPexamples}
+\caption{\label{fig:Plot2DBPexamples}Example slices through rectangular planar array beam pattern}
+\end{center}
+\end{sidewaysfigure}
+
+\clearpage
+\section{Plotting 3D beam patterns}
 
 The function \texttt{Plot3DBP.m} plots the three dimensional beam magnitude with decibel scaling. Usage instructions are shown in Listing~\ref{lst:Plot3DBP}. The three required inputs are elevation and azimuthal angle vectors, $\theta$ and $\psi$ in degrees, and the beam pattern matrix. 
 

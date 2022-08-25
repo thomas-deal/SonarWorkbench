@@ -76,6 +76,8 @@ if PlotType == 2 || PlotType == 4
     end
     rmin = R + dBScale(1) + dr;
     rmax = R + dBScale(2);
+    % Axis padding
+    axpad = R + dr;
 end
 %% Plot Pattern
 if ~isempty(hax)
@@ -83,6 +85,7 @@ if ~isempty(hax)
 else
     figure
 end
+co = get(gca,'ColorOrderIndex');
 hold on
 switch PlotType
     case 1      % Rectangular plot, phi = x axis
@@ -110,8 +113,10 @@ switch PlotType
                  'HorizontalAlignment','right', ...
                  'VerticalAlignment','bottom')
         end
+        plot(-axpad,-axpad,'LineStyle','none','marker','none')
+        plot(axpad,axpad,'LineStyle','none','marker','none')
         % Plot data
-        set(gca,'ColorOrderIndex',1)
+        set(gca,'ColorOrderIndex',co)
         hp = plot(y,x);
     case 3      % Rectangular plot, phi = y axis
         hp = plot(BPdB,phi);
@@ -140,8 +145,10 @@ switch PlotType
                  'HorizontalAlignment','center', ...
                  'VerticalAlignment','top')
         end
+        plot(-axpad,-axpad,'LineStyle','none','marker','none')
+        plot(axpad,axpad,'LineStyle','none','marker','none')
         % Plot data
-        set(gca,'ColorOrderIndex',1)
+        set(gca,'ColorOrderIndex',co)
         hp = plot(x,y);
 end
 hold off

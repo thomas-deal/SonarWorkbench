@@ -42,6 +42,7 @@ Array.Net = 1;
 Array.ePos_m = [0;0;0];
 Array.eOri_deg = [0;0;0];
 Array.aPos_m = [0;0;0];
+Array.aOri_deg = [0;0;0];
 %% Generate Element Patterns
 % Omnidirectional Element
 Array.Element = OmniElement;
