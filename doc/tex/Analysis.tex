@@ -15,19 +15,37 @@ The function \texttt{PlotArray.m} creates a 3D plot of an array. Usage instructi
 \begin{equation}
 BP(\lambda,\theta,\psi) = \sum_{i=1}^{N_e} w_i(\lambda,\theta_0,\psi_0)E_i(\lambda,\theta,\psi)e^{j2\pi\left(\frac{\cos\theta\cos\psi}{\lambda}x_i + \frac{\cos\theta\sin\psi}{\lambda}y_i + \frac{\sin\theta}{\lambda}z_i\right)},
 \end{equation}
-where, for the $i^{th}$ element in the array, $w_i(\lambda,\theta_0,\psi_0)$ is the complex weight, $E_i(\lambda,\theta,\psi)$ is the element pattern, rotated according to the element orientation ($\gamma_i$,$\theta_i$,$\psi_i$), and ($x_i$,$y_i$,$z_i$) are the element coordinates. This computation is performed in the array frame. The resulting beam pattern can be converted to the body frame through an appropriate translation and rotation.
+where, for the $i^{th}$ element in the array, $w_i(\lambda,\theta_0,\psi_0)$ is the complex weight, $E_i(\lambda,\theta,\psi)$ is the element pattern, rotated according to the element orientation ($\gamma_i$,$\theta_i$,$\psi_i$), and ($x_i$,$y_i$,$z_i$) are the element coordinates. This computation is performed in the body frame. To calculate the beam pattern in the array frame, set the array position and orientation to [0;0;0].
 
-The beam pattern is returned in complex linear units. This retains the amplitude and phase information from the beam. The amplitude is normalized by dividing the output by the sum of the beam weight amplitudes,
+The beam pattern is returned in complex linear units. This retains the amplitude and phase information from the beam. By default, the amplitude is normalized by dividing the output by the sum of the beam weight amplitudes,
 \begin{equation}
 BP_{norm}(\lambda,\theta,\psi) = \frac{BP(\lambda,\theta,\psi)}{\sum_{i=1}^{N_e}|w_i(\lambda,\theta_0,\psi_0)|}.
 \end{equation}
-For an unsteered beam, this produces an output with amplitude 1 along the maximum response axis. Steering beams off axis can result in a peak beam amplitude less than 1.
+For an unsteered beam, this produces an output with amplitude 1 along the maximum response axis. Steering beams off axis can result in a peak beam amplitude less than 1. The user can also choose to normalize the beam pattern relative to the peak calculated value or skip the normalization step altogether.
 
-Usage instructions for \texttt{BeamPattern.m} are shown in Listing~\ref{lst:BeamPattern}. All input parameters are required. The first two are the array and beam structures. The third parameter is the wavelength, $\lambda$, in meters. This must be a scalar. 
+Usage instructions for \texttt{BeamPattern.m} are shown in Listing~\ref{lst:BeamPattern}. The first two input parameters are the array and beam structures. The third parameter is the wavelength, $\lambda$, in meters. This must be a scalar. 
 
-The final two parameters are the elevation and azimuthal angles over which the beam pattern is to be calculated, in degrees. These parameters can be scalars, vectors, or matrices, but they must have compatible dimensions. If both are scalars, the output, \texttt{BP}, will be a scalar. If both are column vectors of the same length or matrices with identical dimensions, \texttt{BeamPattern.m} treats them as coordinate pairs at which to evaluate the beam pattern. If \texttt{theta} is a column vector and \texttt{psi} is a row vector, \texttt{BeamPattern.m} uses the Matlab function \texttt{ndgrid} to calculate a matrix \texttt{BP}, with rows corresponding to constant $\theta$ and columns corresponding to constant $\psi$. The user can generate their own matrix inputs using \texttt{[Theta,Psi] = ndgrid(theta,psi);} for vectors \texttt{theta} and \texttt{psi}.
+The final required parameters are the elevation and azimuthal angles over which the beam pattern is to be calculated, in degrees. These parameters can be scalars, vectors, or matrices, but they must have compatible dimensions. If both are scalars, the output, \texttt{BP}, will be a scalar. If both are column vectors of the same length or matrices with identical dimensions, \texttt{BeamPattern.m} treats them as coordinate pairs at which to evaluate the beam pattern. If \texttt{theta} is a column vector and \texttt{psi} is a row vector, \texttt{BeamPattern.m} uses the Matlab function \texttt{ndgrid} to calculate a matrix \texttt{BP}, with rows corresponding to constant $\theta$ and columns corresponding to constant $\psi$. The user can generate their own matrix inputs using \texttt{[Theta,Psi] = ndgrid(theta,psi);} for vectors \texttt{theta} and \texttt{psi}.
 
-\lstinputlisting[firstline=2,lastline=34,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
+After the required parameters, a single optional parameter, \texttt{NormMethod},  selects the method to use for beam pattern normalization, as shown in Table~\ref{tab:BeamPatternNormMethod}.
+
+\begin{table}[!ht]
+	\begin{center}
+		\caption{\texttt{NormMethod} options for \texttt{BeamPattern.m}}
+		\label{tab:BeamPatternNormMethod}
+		\begin{tabular}{c|l} 
+			\texttt{NormMethod} & \textbf{Description} \\
+			\hline
+			0 & No normalization\\
+			1 & Normalize by beam pattern weights \\
+			2 & Normalize by peak calculated beam pattern value\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\clearpage
+
+\lstinputlisting[firstline=2,lastline=41,caption={\texttt{BeamPattern.m}},label={lst:BeamPattern}]{../../mdl/BeamPattern.m}
 
 \section{Extracting 2D slices from 3D beam patterns}
 

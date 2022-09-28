@@ -1,5 +1,6 @@
-function BP = BeamPattern(Array,Beam,lambda,theta,psi)
+function BP = BeamPattern(Array,Beam,lambda,theta,psi,varargin)
 %% function BP = BeamPattern(Array,Beam,lambda,theta,psi)
+% function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
 %
 % Computes the beam pattern for an array of elements at coordinates
 % (ex_m,ey_m,ez_m) rotated (egamma_deg,etheta_deg,epsi_deg) from the x axis
@@ -28,6 +29,12 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi)
 %           lambda          - Acoustic wavelength, m
 %           theta           - Elevation angle vector or matrix, deg
 %           psi             - Azimuthal angle vector or matrix, deg
+%
+% Optional Inputs:
+%           NormMethod  - Normalization method enumeration
+%                         0 = No normalization
+%                         1 = Weight normalization
+%                         2 = Peak normalization
 % 
 % Outputs:
 %           BP          - Beam pattern, complex linear units
@@ -35,6 +42,13 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi)
 
 %% Initialize
 BP = 1;
+%% Check Inputs
+NormMethod = 1;
+if nargin == 6
+    if ~isempty(varargin{1})
+        NormMethod = varargin{1};
+    end
+end
 %% Check Input Dimensions
 resize = 0;
 thetaSize = size(theta);
@@ -110,4 +124,16 @@ for i=1:Array.Ne
          exp(1i*2*pi*fz*ePos(3));
 end
 %% Normalize
-BP = BP/sum(abs(Beam.ew) );
+switch NormMethod
+    case 0
+        % Do not normalize
+    case 1
+        % Normalize by weights
+        BP = BP/sum(abs(Beam.ew));
+    case 2
+        % Normalize by peak
+        BP = BP/max(abs(BP(:)));
+    otherwise
+        % Do not normalize
+end
+
