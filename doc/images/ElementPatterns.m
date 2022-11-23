@@ -13,9 +13,11 @@ theta = -90:90;
 % Omnidirectional Element
 OmniElement.type = 0;
 OmniElement.baffle = 0;
+OmniElement.params_m = [d;0;0];
 % Cosine Element
 CosElement.type = 1;
 CosElement.baffle = 0;
+CosElement.params_m = [d;0;0];
 % Linear Element
 LineElement.type = 2;
 LineElement.baffle = 0;
@@ -99,13 +101,15 @@ set(gcf,'Position',pos)
 % Omnidirectional Element
 subplot(2,3,1)
 Array.Element = OmniElement;
-PlotArray(Array,OmniBeam,gca,1)
+% PlotArray(Array,OmniBeam,gca,1)
+PlotNEDaxes([0;0;0],[0;0;0],gca)
 Plot3DBP(theta,psi,OmniBeam.BP,[],[],gca,Array.aPos_m)
 title('Omnidirectional')
 % Cosine Element
 Array.Element = CosElement;
 subplot(2,3,2)
-PlotArray(Array,CosBeam,gca,1)
+% PlotArray(Array,CosBeam,gca,1)
+PlotNEDaxes([0;0;0],[0;0;0],gca)
 Plot3DBP(theta,psi,CosBeam.BP,[],[],gca,Array.aPos_m)
 title('Cosine')
 % Linear Element

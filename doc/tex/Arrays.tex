@@ -45,4 +45,4 @@ For mixed-element arrays, the \texttt{.eindex} field must be a row vector of len
 
 An example is included in \texttt{SampleVSCardioid.m} for a simple vector sensor. The relevant portion is shown in Listing~\ref{lst:SampleVSCardioid}. This vector sensor consists of four elements: a hydrophone and three orthogonal accelerometers. The three accelerometers are identical except for their orientations, so there are a total of two unique elements. The hydrophone is \texttt{VS.Element(1)}, and the accelerometer is \texttt{VS.Element(2)}. The array structure is named \texttt{VS}, and the hydrophone is the first element, followed by the $x$, $y$, and $z$ accelerometers. This makes the first entry in \texttt{.eindex} equal to 1 and the rest of the entries equal to 2. Rows two and three of \texttt{.eOri\_deg} rotate elements 3 and 4 from the $x$ axis to the $y$ and $z$ axes, respectively.
 
-\lstinputlisting[firstline=6,lastline=22,caption={\texttt{SampleVSCardioid.m}},label={lst:SampleVSCardioid}]{../../test/SampleVSCardioid.m}
+\lstinputlisting[firstline=5,lastline=22,caption={\texttt{SampleVSCardioid.m}},label={lst:SampleVSCardioid}]{../../test/SampleVSCardioid.m}

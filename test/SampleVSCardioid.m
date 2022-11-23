@@ -5,17 +5,17 @@ SetPath
 %% Define Elements
 Element(1).type = 0;
 Element(1).baffle = 0;
-Element(1).params_m = [0;0;0];
+Element(1).params_m = [0.1;0;0];
 Element(2).type = 1;
 Element(2).baffle = 0;
-Element(2).params_m = [0;0;0];
+Element(2).params_m = [0.1;0;0];
 %% Define Vector Sensor
 VS.Ne = 4;
 VS.Net = 2;
 VS.Element = Element;
 VS.ePos_m = zeros(3,VS.Ne,1);
 VS.eOri_deg = [0  0  0  0; ...
-               0  0  0 90; ...
+               0  0  0 -90; ...
                0  0 90  0];
 VS.eindex = [1 2 2 2];
 VS.aPos_m = [0;0;0];
@@ -32,7 +32,7 @@ end
 if ~exist('theta0','var')
 	theta0 = 0;
 end
-ep = [1 cosd(theta0)*cosd(psi0) cosd(theta0)*sind(psi0) sind(theta0)];
+ep = [1 cosd(-theta0)*cosd(psi0) cosd(-theta0)*sind(psi0) sind(-theta0)];
 Beam.ew = ea.*ep;
 %% Computational Grid
 psi = -180:180;

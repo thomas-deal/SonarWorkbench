@@ -28,7 +28,7 @@ An element structure holds the parameters that define the element geometry. The 
 
 The field \texttt{.baffle} dictates whether the element should be baffled by the element frame $y$-$z$ plane (e.g. arrays mounted to platforms) or unbaffled (e.g. towed arrays, sonobuoys). The omnidirectional, uniform line, and cosine elements can all be used with and without baffling. The piston elements' element patterns are all derived from equations assuming the piston is mounted in an infinite rigid baffle; therefore, it is recommended that the user set these element's \texttt{.baffle=1} for best results. Diffraction effects caused by finite baffle dimensions are beyond the scope of Sonar Workbench. 
 
-The field \texttt{.params\_m} is a three-element column vector defining the element geometry. A different number of parameters are required to define the shape of different element types. The components of \texttt{.params\_m} for each element type are listed in Table~\ref{tab:ElementParams}. Note that idealized omnidirectional and cosine elements do not use require shape parameters, so all values can be set to 0 for these element types. As indicated by the field name, dimension units are in meters.
+The field \texttt{.params\_m} is a three-element column vector defining the element geometry. A different number of parameters are required to define the shape of different element types. The components of \texttt{.params\_m} for each element type are listed in Table~\ref{tab:ElementParams}. As indicated by the field name, dimension units are in meters.
 
 \begin{table}[!ht]
 	\begin{center}
@@ -36,6 +36,10 @@ The field \texttt{.params\_m} is a three-element column vector defining the elem
 		\label{tab:ElementParams}
 		\begin{tabular}{c|c|l} 
 			\textbf{Element Type} & \textbf{Vector Component} & \textbf{Description} \\
+			\hline
+			Omnidirectional & \texttt{1} & radius (m)\\
+			\hline
+			Cosine & \texttt{1} & circumscribed sphere radius (m)\\
 			\hline
 			\multirow{3}{*}{Uniform Line} & \texttt{1} & length along x-axis (m)\\
 			& \texttt{2} & length along y-axis (m)\\

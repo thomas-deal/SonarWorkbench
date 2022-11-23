@@ -1,13 +1,13 @@
-function Plot3DBP(theta,psi,BP,varargin)
-%% function Plot3DBP(theta,psi,BP)
-% function Plot3DBP(theta,psi,BP,PlotType)
-% function Plot3DBP(theta,psi,BP,PlotType,dBScale)
-% function Plot3DBP(theta,psi,BP,PlotType,dBScale,hax)
-% function Plot3DBP(theta,psi,BP,PlotType,dBScale,hax,aPos_m)
+function h = Plot3DBP(theta,psi,BP,varargin)
+%% function h = Plot3DBP(theta,psi,BP)
+% function h = Plot3DBP(theta,psi,BP,PlotType)
+% function h = Plot3DBP(theta,psi,BP,PlotType,dBScale)
+% function h = Plot3DBP(theta,psi,BP,PlotType,dBScale,hax)
+% function h = Plot3DBP(theta,psi,BP,PlotType,dBScale,hax,aPos_m)
 %
 % Plots a beam pattern in 3D space. Beam pattern is defined over azimuthal
 % angles psi and elevation angles theta. User can choose to plot in a new
-% figure or in an existing axis.
+% figure or in an existing axis. Optionally returns a handle to the plot.
 %
 % Inputs:
 %           theta   - Elevation angle vector, deg
@@ -22,6 +22,9 @@ function Plot3DBP(theta,psi,BP,varargin)
 %           dBScale  - Magnitude range for plot, [dBmin, dBmax], dB
 %           hax      - Handle to axis for plotting in an existing figure
 %           aPos_m   - Array position vector, m
+%
+% Optional Outputs:
+%           h        - Handle to plot
 %
 
 %% Check Input Arguments
@@ -101,4 +104,7 @@ colormap(cmocean('thermal'))
 caxis(dBScale)
 set(gca,'zdir','reverse','ydir','reverse')
 view([60 15])
-        
+%% Check Output Arguments
+if nargout == 1
+    h = hp;
+end

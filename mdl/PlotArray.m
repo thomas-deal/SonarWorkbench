@@ -96,10 +96,13 @@ if actualsize
 else
     R = 1.5*max(sqrt(sum(Array.ePos_m.^2,1)));
     if R==0 % Single-element or co-located elements
-		for i=1:Array.Ne
+        for i=1:Array.Ne
             shape = ElementShape(Array.Element(eindex(i)));
 			R = max(R,max(sqrt(sum(shape.^2,1))));
-		end
+        end
+        if R==0
+            R = 1;
+        end
     end
 end
 if any(Array.aPos_m~=0) || any(Array.aOri_deg~=0)
@@ -110,23 +113,73 @@ end
 PlotNEDaxes(Array.aPos_m,Array.aOri_deg,hax)
 AROT = RotationMatrix(Array.aOri_deg);
 for i=1:Array.Ne
-    % Rotate Element Shape
-    EROT = RotationMatrix(Array.eOri_deg(:,i));
+    % Element position
     ePos = Array.aPos_m + AROT*Array.ePos_m(:,i)/R;
-    shape = Array.aPos_m + ...
-            AROT*(Array.ePos_m(:,i) + ...
-                  EROT*ElementShape(Array.Element(eindex(i))))/R;
-    % Plot Element with Amplitude Weight and Element Number
-    patch(shape(1,:), ...
-          shape(2,:), ...
-          shape(3,:), ...
-          color, ...
-          'FaceVertexCData',repmat(color,size(shape,2),1), ...
-          'FaceAlpha',abs(ew(i)))    
-    plot3(shape(1,:), ...
-          shape(2,:), ...
-          shape(3,:), ...
-          'k')
+    if Array.Element(eindex(i)).type < 2
+        % Monopole or dipole
+        theta = -90:90;
+        psi = -180:180;
+        theta0 = Array.eOri_deg(2,i);
+        psi0 = Array.eOri_deg(3,i);
+        LOS0 = [cosd(psi0).*cosd(-theta0); ...
+                sind(psi0).*cosd(-theta0); ...
+                sind(-theta0)];
+        LOS = AROT*LOS0;
+        theta0 = -asind(LOS(3,:));
+        psi0 = atan2d(LOS(2,:),LOS(1,:));
+        EP = ElementPattern(Array.Element(eindex(i)), ...
+                            1, ...
+                            theta, ...
+                            psi, ...
+                            [0;theta0;psi0]);
+        [Theta,Psi] = ndgrid(theta,psi);
+        dBScale = [-6 0];
+        EPdB = 10*log10(EP.*conj(EP));
+        EPdB(EPdB<dBScale(1)) = dBScale(1);
+        EPdB(EPdB>dBScale(2)) = dBScale(2);
+        EPdB = EPdB - dBScale(1);
+        ux = cosd(-Theta).*cosd(Psi);
+        uy = cosd(-Theta).*sind(Psi);
+        uz = sind(-Theta);
+        Esize = 0.1;
+        if Array.Element(eindex(i)).params_m(1) > 0
+            Esize = Array.Element(eindex(i)).params_m(1)/R;
+        end
+        EPX = Esize*EPdB/diff(dBScale).*ux;
+        EPY = Esize*EPdB/diff(dBScale).*uy;
+        EPZ = Esize*EPdB/diff(dBScale).*uz;
+        CData = zeros(length(theta),length(psi),3);
+        if Array.Element(eindex(i)).type == 1
+            % Dipole orientation: + => red, - => blue
+            CData(:,:,1) = sign(max(EP,0));
+            CData(:,:,3) = -sign(min(EP,0)); 
+            CData(CData == 0) = 0.4;
+        else
+            for j = 1:3
+                CData(:,:,j) = color(j);
+            end
+        end
+        hp = surf(ePos(1)+EPX,ePos(2)+EPY,ePos(3)+EPZ,CData);
+        set(hp,'FaceAlpha',abs(ew(i)));
+        shading interp
+    else
+        % Rotate element shape
+        EROT = RotationMatrix(Array.eOri_deg(:,i));
+        shape = Array.aPos_m + ...
+                AROT*(Array.ePos_m(:,i) + ...
+                      EROT*ElementShape(Array.Element(eindex(i))))/R;
+        % Plot element with amplitude weight and element number
+        patch(shape(1,:), ...
+              shape(2,:), ...
+              shape(3,:), ...
+              color, ...
+              'FaceVertexCData',repmat(color,size(shape,2),1), ...
+              'FaceAlpha',abs(ew(i)))    
+        plot3(shape(1,:), ...
+              shape(2,:), ...
+              shape(3,:), ...
+              'k')
+    end
     if isfield(Array,'etxt')
         etxt = Array.etxt{i};
     else

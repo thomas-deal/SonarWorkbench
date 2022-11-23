@@ -152,6 +152,7 @@ switch PlotType
         hp = plot(x,y);
 end
 hold off
+%% Check Output Arguments
 if nargout == 1
     h = hp;
 end
