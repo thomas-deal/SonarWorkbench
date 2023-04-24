@@ -1,6 +1,5 @@
-function Zr = RectangularPistonRadiationImpedance(k,w,h,varargin)
-%% function Zr = RectangularPistonRadiationImpedance(k,w,h)
-% function Zr = RectangularPistonRadiationImpedance(k,w,h,rho0,c0)
+function Zr = RectangularPistonRadiationImpedance(k,w,h,rho0,c0)
+%% function Zr = RectangularPistonRadiationImpedance(k,w,h,rho0,c0)
 %
 % Calculates the radiation impedance for a rectangular piston element in an
 % infinite plane baffle. The closed form solution to this problem requires 
@@ -14,8 +13,6 @@ function Zr = RectangularPistonRadiationImpedance(k,w,h,varargin)
 %           k       - Wavenumber, m^-1
 %           w       - Piston width, m
 %           h       - Piston height, m
-%
-% Optional Inputs:
 %           rho0    - Water density, kg/m^3
 %           c0      - Water sound speed, m/s
 %
@@ -23,23 +20,6 @@ function Zr = RectangularPistonRadiationImpedance(k,w,h,varargin)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
-%% Check Input Arguments
-% Default values
-rho0 = 1e3;
-c0 = 1500;
-switch nargin
-    case 3
-        if ~isempty(varargin{1})
-            rho0 = varargin{1};
-        end
-    case 4
-        if ~isempty(varargin{1})
-            rho0 = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            c0 = varargin{2};
-        end
-end
 %% Calculate
 if license('test','symbolic_toolbox')
     q = h/w;

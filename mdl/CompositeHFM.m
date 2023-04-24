@@ -1,11 +1,9 @@
-function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,varargin)
-%% function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs)
-% function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,<name>,<value>)
+function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,gamma)
+%% function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,gamma)
 %
 % Generates a hyperbolic frequency modulation vector and a pulse envelope
 % that flattens its frequency response and reduces it spectral ripple.
-% Optional input gamma passed as <name>,<value> pair sets the amount of
-% ripple reduction.
+% Input gamma sets the amount of ripple reduction.
 %
 % [1] D.M. Drumheller, "Uniform spectral amplitude windowing for hyperbolic
 %     frequency modulated waveforms", NRL, Washington, DC,
@@ -17,27 +15,17 @@ function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,varargin)
 %       T       - Duration, s
 %       fc      - Center frequency, Hz
 %       fs      - Sample frequency, Hz
+%       gamma   - Ripple reduction parameter <0.1>
 %
 % Outputs:
 %       env     - Pulse envelope, normalized
 %       hfm     - Baseband modulation, Hz
 %
 
-%% Parse Input Arguments
-par = inputParser;
-addRequired(par,'f1',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'f2',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'T',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fc',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fs',@(x) isnumeric(x) && isscalar(x));
-addParameter(par,'gamma',0.1,@(x) isnumeric(x) && isscalar(x));
-parse(par,f1,f2,T,fc,fs,varargin{:});
-f1 = par.Results.f1;
-f2 = par.Results.f2;
-T = par.Results.T;
-fc = par.Results.fc;
-fs = par.Results.fs;
-gamma = par.Results.gamma;
+%% Check Inputs
+if nargin<6
+    gamma = 0.1;
+end
 %% Generate Time Vector
 t = (0:1/fs:T)';
 %% Generate Envelope

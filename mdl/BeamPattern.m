@@ -1,6 +1,5 @@
-function BP = BeamPattern(Array,Beam,lambda,theta,psi,varargin)
-%% function BP = BeamPattern(Array,Beam,lambda,theta,psi)
-% function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
+function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
+%% function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
 %
 % Computes the beam pattern for an array of elements at coordinates
 % (ex_m,ey_m,ez_m) rotated (egamma_deg,etheta_deg,epsi_deg) from the x axis
@@ -29,8 +28,6 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi,varargin)
 %           lambda          - Acoustic wavelength, m
 %           theta           - Elevation angle vector or matrix, deg
 %           psi             - Azimuthal angle vector or matrix, deg
-%
-% Optional Inputs:
 %           NormMethod  - Normalization method enumeration
 %                         0 = No normalization
 %                         1 = Weight normalization
@@ -43,11 +40,8 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi,varargin)
 %% Initialize
 BP = 1;
 %% Check Inputs
-NormMethod = 1;
-if nargin == 6
-    if ~isempty(varargin{1})
-        NormMethod = varargin{1};
-    end
+if nargin<6
+    NormMethod = 1;
 end
 %% Check Input Dimensions
 resize = 0;

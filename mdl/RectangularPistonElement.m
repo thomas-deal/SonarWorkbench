@@ -1,6 +1,5 @@
-function E = RectangularPistonElement(Element,lambda,theta,psi,varargin)
-%% function E = RectangularPistonElement(Element,lambda,theta,psi)
-% function E = RectangularPistonElement(Element,lambda,theta,psi,ori)
+function E = RectangularPistonElement(Element,lambda,theta,psi,ori)
+%% function E = RectangularPistonElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for an ideal rectangular plane piston
 % of width w and height h at wavelength lambda over azimuthal angles psi
@@ -20,8 +19,6 @@ function E = RectangularPistonElement(Element,lambda,theta,psi,varargin)
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
-%
-% Optional Inputs:
 %           ori     - Element normal orientation vector, deg
 %
 % Outputs:
@@ -36,11 +33,8 @@ E = 1;
 w = lambda/2;
 h = lambda/2;
 baffle = 0;
-ori = [0;0;0];
 if nargin==5
-    if ~isempty(varargin{1})
-        ori = varargin{1};
-    end
+    ori = [0;0;0];
 end
 if Element.params_m(1)~=0
     w = Element.params_m(1);

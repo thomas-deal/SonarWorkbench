@@ -15,10 +15,10 @@ SampleBeam
 Beam.theta = theta;
 Beam.psi = psi;
 Beam.lambda = lambda;
-Beam.BP = BeamPattern(Array,Beam,lambda,theta,psi);
+Beam.BP = BeamPattern(Array,Beam,lambda,theta,psi,1);
 %% Analyze Beam Pattern
 Beam.DI = CalculateDI(theta,psi,Beam.BP);
-[Beam.BWV, Beam.BWH] = BeamWidth3D(theta,psi,Beam.BP);
+[Beam.BWV, Beam.BWH] = BeamWidth3D(theta,psi,Beam.BP,theta0,psi0,1);
 PlotArray(Array,Beam)
 Plot3DBP(theta,psi,Beam.BP,[],[],gca,Array.aPos_m)
 title(['Sample Beam Pattern,', newline, ...

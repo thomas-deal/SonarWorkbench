@@ -13,8 +13,6 @@ function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,varargin)
 %       fc      - Center frequency, Hz
 %       fs      - Sample frequency, Hz
 %       scheme  - Modulation scheme
-%
-% Optional Inputs:
 %       alpha   - Hyperbolic fm exponent parameter <1>
 %       beta    - Taylor fm limit parameter <0.9>
 %
@@ -22,25 +20,14 @@ function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,varargin)
 %       fm      - Baseband modulation, Hz
 %
 
-%% Parse Input Arguments
-par = inputParser;
-addRequired(par,'f1',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'f2',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'T',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fc',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fs',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'scheme',@(x) isnumeric(x) && isscalar(x));
-addParameter(par,'alpha',1,@(x) isnumeric(x) && isscalar(x));
-addParameter(par,'beta',0.9,@(x) isnumeric(x) && isscalar(x) && x < 1);
-parse(par,f1,f2,T,fc,fs,scheme,varargin{:});
-f1 = par.Results.f1;
-f2 = par.Results.f2;
-T = par.Results.T;
-fc = par.Results.fc;
-fs = par.Results.fs;
-scheme = par.Results.scheme;
-alpha = par.Results.alpha;
-beta = par.Results.beta;
+%% Check Inputs
+if nargin<7
+    alpha = 1;
+    beta = 0.9;
+end
+if nargin<8
+    beta = 0.9;
+end
 %% Generate Time Vector
 t = (0:1/fs:T)';
 %% Generate Passband Modulation

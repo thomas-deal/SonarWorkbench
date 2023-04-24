@@ -1,6 +1,5 @@
-function E = AnnularPistonElement(Element,lambda,theta,psi,varargin)
-%% function E = AnnularPistonElement(Element,lambda,theta,psi)
-% function E = AnnularPistonElement(Element,lambda,theta,psi,ori)
+function E = AnnularPistonElement(Element,lambda,theta,psi,ori)
+%% function E = AnnularPistonElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for an ideal annular plane piston of
 % outer radius a and iner radius b at wavelength lambda over azimuthal
@@ -20,8 +19,6 @@ function E = AnnularPistonElement(Element,lambda,theta,psi,varargin)
 %           lambda  - Acoustic wavelength, 1/m
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
-%
-% Optional Inputs:
 %           ori     - Element normal orientation vector, deg
 %
 % Outputs:
@@ -39,11 +36,8 @@ end
 a = lambda/4;
 b = lambda/8;
 baffle = 0;
-ori = 0;
-if nargin==5
-    if ~isempty(varargin{1})
-        ori = varargin{1};
-    end
+if nargin<5
+    ori = [0;0;0];
 end
 if Element.params_m(1)~=0
     a = Element.params_m(1);

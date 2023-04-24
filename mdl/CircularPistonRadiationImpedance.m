@@ -1,6 +1,5 @@
-function Zr = CircularPistonRadiationImpedance(k,a,varargin)
-%% function Zr = CircularPistonRadiationImpedance(k,a)
-% function Zr = CircularPistonRadiationImpedance(k,a,rho0,c0)
+function Zr = CircularPistonRadiationImpedance(k,a,rho0,c0)
+%% function Zr = CircularPistonRadiationImpedance(k,a,rho0,c0)
 %
 % Calculates the radiation impedance for a circular piston element in an
 % infinite plane baffle. Uses function StruveH1 from Matlab Central. This
@@ -11,8 +10,6 @@ function Zr = CircularPistonRadiationImpedance(k,a,varargin)
 % Inputs:
 %           k       - Wavenumber, m^-1
 %           a       - Piston radius, m
-%
-% Optional Inputs:
 %           rho0    - Water density, kg/m^3
 %           c0      - Water sound speed, m/s
 %
@@ -20,23 +17,6 @@ function Zr = CircularPistonRadiationImpedance(k,a,varargin)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
-%% Check Input Arguments
-% Default values
-rho0 = 1e3;
-c0 = 1500;
-switch nargin
-    case 3
-        if ~isempty(varargin{1})
-            rho0 = varargin{1};
-        end
-    case 4
-        if ~isempty(varargin{1})
-            rho0 = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            c0 = varargin{2};
-        end
-end
 %% Calculate
 Zr = rho0*c0*pi*a.^2*(1-besselj(1,2*k.*a)./(k.*a) - 1i*StruveH1(2*k.*a)./(k.*a));
 Zr(k==0) = 0;
