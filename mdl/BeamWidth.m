@@ -1,7 +1,5 @@
-function BW = BeamWidth(ang,bp,varargin)
-%% function BW = BeamWidth(ang,bp)
-% function BW = BeamWidth(ang,bp,ang0)
-% function BW = BeamWidth(ang,bp,ang0,renorm)
+function BW = BeamWidth(ang,bp,ang0,renorm)
+%% function BW = BeamWidth(ang,bp,ang0,renorm)
 %
 % Calculates the -3 dB beam width of a single beam slice. Peak location can
 % be aided with optional parameter ang0. Beam width can be calculated using
@@ -11,8 +9,6 @@ function BW = BeamWidth(ang,bp,varargin)
 % Inputs:
 %           ang     - Angle vector, deg
 %           bp      - Beam pattern slice vector, complex linear units
-%
-% Optional Inputs:
 %           ang0    - Initial estimate for peak search, deg
 %           renorm  - Re-normalize beam pattern about peak value
 %
@@ -23,23 +19,9 @@ function BW = BeamWidth(ang,bp,varargin)
 %% Initialize
 BW = NaN;
 %% Check Input Arguments
-findpeak = 1;
-ang0 = 0;
-renorm = 0;
-switch nargin
-    case 3
-        if ~isempty(varargin{1})
-            findpeak = 0;
-            ang0 = varargin{1};
-        end
-    case 4
-        if ~isempty(varargin{1})
-            findpeak = 0;
-            ang0 = varargin{1};
-        end
-        if ~isempty(varargin{2})
-            renorm = varargin{2};
-        end
+findpeak = (nargin<3);
+if nargin<4
+    renorm = 0;
 end
 %% Find Peak
 if findpeak

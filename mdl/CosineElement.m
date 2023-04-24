@@ -1,6 +1,5 @@
-function E = CosineElement(Element,lambda,theta,psi,varargin) %#ok<INUSL>
-%% function E = CosineElement(Element,lambda,theta,psi)
-% function E = CosineElement(Element,lambda,theta,psi,ori)
+function E = CosineElement(Element,lambda,theta,psi,ori) %#ok<INUSL>
+%% function E = CosineElement(Element,lambda,theta,psi,ori)
 %
 % Calculates the element pattern for a sensor with cosine directivity over 
 % azimuthal angles psi and elevation angles theta.
@@ -16,8 +15,6 @@ function E = CosineElement(Element,lambda,theta,psi,varargin) %#ok<INUSL>
 %           lambda  - Acoustic wavelength, m (unused)
 %           theta   - Elevation angle vector or matrix, deg
 %           psi     - Azimuthal angle vector or matrix, deg
-%
-% Optional Inputs:
 %           ori     - Element normal orientation vector, deg
 %
 % Outputs:
@@ -33,11 +30,8 @@ if any([isnan(Theta(:)) isnan(Psi(:))])
 end
 %% Check Input Arguments
 baffle = 0;
-ori = [0;0;0];
-if nargin==5
-    if ~isempty(varargin{1})
-        ori = varargin{1};
-    end
+if nargin<5
+    ori = [0;0;0];
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
