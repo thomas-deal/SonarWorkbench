@@ -1,7 +1,0 @@
-%% Generate All Images
-NEDCoordinateSystem
-BodyArrayElementFrame
-ElementPatterns
-PlotSampleArray
-WindowFunctions
-PlotSampleBeam
