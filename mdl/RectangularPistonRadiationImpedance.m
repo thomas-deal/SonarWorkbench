@@ -20,6 +20,13 @@ function Zr = RectangularPistonRadiationImpedance(k,w,h,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<5
+    c0 = 1500;
+end
+if nargin<4
+    rho0 = 1000;
+end
 %% Calculate
 if license('test','symbolic_toolbox')
     q = h/w;

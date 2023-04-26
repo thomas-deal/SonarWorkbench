@@ -26,6 +26,24 @@ function [env,hfm] = CompositeHFM(f1,f2,T,fc,fs,gamma)
 if nargin<6
     gamma = 0.1;
 end
+if ~isnumeric(f1) || ~isscalar(f1)
+    error([mfilename '(): Input f1 failed verification test.'])
+end
+if ~isnumeric(f2) || ~isscalar(f2)
+    error([mfilename '(): Input f2 failed verification test.'])
+end
+if ~isnumeric(T) || ~isscalar(T)
+    error([mfilename '(): Input T failed verification test.'])
+end
+if ~isnumeric(fc) || ~isscalar(fc)
+    error([mfilename '(): Input fc failed verification test.'])
+end
+if ~isnumeric(fs) || ~isscalar(fs)
+    error([mfilename '(): Input fs failed verification test.'])
+end
+if ~isnumeric(gamma) || ~isscalar(gamma)
+    error([mfilename '(): Input gamma failed verification test.'])
+end
 %% Generate Time Vector
 t = (0:1/fs:T)';
 %% Generate Envelope

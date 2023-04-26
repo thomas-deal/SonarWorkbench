@@ -15,19 +15,22 @@ function b = GenerateMatchedFilterFM(env,fm,T,fsp,fs)
 %       b       - Matched filter coefficients
 %
 
-%% Parse Input Arguments
-par = inputParser;
-addRequired(par,'env',@(x) isnumeric(x) && iscolumn(x));
-addRequired(par,'fm',@(x) isnumeric(x) && iscolumn(x));
-addRequired(par,'T',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fsp',@(x) isnumeric(x) && isscalar(x));
-addRequired(par,'fs',@(x) isnumeric(x) && isscalar(x));
-parse(par,env,fm,T,fsp,fs);
-env = par.Results.env;
-fm = par.Results.fm;
-T = par.Results.T;
-fsp = par.Results.fsp;
-fs = par.Results.fs;
+%% Check Inputs
+if ~isnumeric(env) || ~iscolumn(env)
+    error([mfilename '(): Input env failed verification test.'])
+end
+if ~isnumeric(fm) || ~iscolumn(fm)
+    error([mfilename '(): Input fm failed verification test.'])
+end
+if ~isnumeric(T) || ~isscalar(T)
+    error([mfilename '(): Input T failed verification test.'])
+end
+if ~isnumeric(fsp) || ~isscalar(fsp)
+    error([mfilename '(): Input fsp failed verification test.'])
+end
+if ~isnumeric(fs) || ~isscalar(fs)
+    error([mfilename '(): Input fs failed verification test.'])
+end
 %% Generate Time Vectors
 tp = (0:1/fsp:T)';
 t = (0:1/fs:T)';

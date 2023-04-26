@@ -16,6 +16,13 @@ function Zr = MonopoleRadiationImpedance(k,a,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<4
+    c0 = 1500;
+end
+if nargin<3
+    rho0 = 1000;
+end
 %% Calculate
 Zr = rho0*c0*4*pi*a.^2./(1-1./(1i*k.*a));
 Zr(k==0) = 0;

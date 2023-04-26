@@ -37,7 +37,7 @@ else
     end
 end
 %% Convert to dB
-BP = 20*log10(abs(bp));
+BP = 10*log10(bp.*conj(bp));
 if BP(i0)<=-3
     return
 end

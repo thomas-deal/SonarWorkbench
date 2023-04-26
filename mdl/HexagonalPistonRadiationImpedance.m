@@ -17,6 +17,13 @@ function Zr = HexagonalPistonRadiationImpedance(k,a,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<4
+    c0 = 1500;
+end
+if nargin<3
+    rho0 = 1000;
+end
 %% Calculate
 a = sqrt((2*sqrt(3)*a^2)/pi);
 Zr = CircularPistonRadiationImpedance(k,a,rho0,c0);

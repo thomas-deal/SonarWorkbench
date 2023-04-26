@@ -10,7 +10,6 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
 %
 % Inputs:
 %           Array       - Array structure with the following fields
-%           [required ]
 %               .Ne         - Number of elements
 %               .Net        - Numer of unique element types
 %               .Element    - Array of length .Net element structures 
@@ -20,7 +19,6 @@ function BP = BeamPattern(Array,Beam,lambda,theta,psi,NormMethod)
 %                               pattern files for details
 %               .ePos_m     - Element position matrix, m
 %               .eOri_deg   - Element normal orientation matrix, deg
-%           [optional ]
 %               .eindex     - Vector of indices into element structure
 %                             vector to support non-uniform element arrays
 %           Beam        - Beam structure with the following required fields

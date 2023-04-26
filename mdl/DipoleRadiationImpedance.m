@@ -16,6 +16,13 @@ function Zr = DipoleRadiationImpedance(k,a,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<4
+    c0 = 1500;
+end
+if nargin<3
+    rho0 = 1000;
+end
 %% Calculate
 Zr = rho0*c0*4*pi*a.^2/3.*((k.*a).^4 - 1i*(2*k.*a + (k.*a).^3))./(4 + (k.*a).^4);
 Zr(k==0) = 0;
