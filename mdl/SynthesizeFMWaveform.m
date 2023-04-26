@@ -15,6 +15,22 @@ function s = SynthesizeFMWaveform(env,fm,T,fsp,fs)
 %       s       - Complex baseband FM waveform
 %
 
+%% Check Inputs
+if ~isnumeric(env) || ~iscolumn(env)
+    error([mfilename '(): Input env failed verification test.'])
+end
+if ~isnumeric(fm) || ~iscolumn(fm)
+    error([mfilename '(): Input fm failed verification test.'])
+end
+if ~isnumeric(T) || ~isscalar(T)
+    error([mfilename '(): Input T failed verification test.'])
+end
+if ~isnumeric(fsp) || ~isscalar(fsp)
+    error([mfilename '(): Input fsp failed verification test.'])
+end
+if ~isnumeric(fs) || ~isscalar(fs)
+    error([mfilename '(): Input fs failed verification test.'])
+end
 %% Generate Time Vectors
 tp = (0:1/fsp:T)';
 t = (0:1/fs:T)';

@@ -17,5 +17,12 @@ function Zr = AnnularPistonRadiationImpedance(k,a,b,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<5
+    c0 = 1500;
+end
+if nargin<4
+    rho0 = 1000;
+end
 %% Calculate
 Zr = CircularRadiationImpedance(k,a,rho0,c0) - CircularPistonRadiationImpedance(k,b,rho0,c0);

@@ -33,7 +33,7 @@ E = 1;
 w = lambda/2;
 h = lambda/2;
 baffle = 0;
-if nargin==5
+if nargin<5
     ori = [0;0;0];
 end
 if Element.params_m(1)~=0

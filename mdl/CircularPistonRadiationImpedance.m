@@ -17,6 +17,13 @@ function Zr = CircularPistonRadiationImpedance(k,a,rho0,c0)
 %           Zr      - Complex radiation impedance, kg/s
 %
 
+%% Check Inputs
+if nargin<4
+    c0 = 1500;
+end
+if nargin<3
+    rho0 = 1000;
+end
 %% Calculate
 Zr = rho0*c0*pi*a.^2*(1-besselj(1,2*k.*a)./(k.*a) - 1i*StruveH1(2*k.*a)./(k.*a));
 Zr(k==0) = 0;

@@ -1,10 +1,8 @@
-function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,varargin)
-%% function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme)
-% function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,<name>,<value>)
+function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,alpha,beta)
+%% function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,alpha,beta)
 %
 % Generates a vector representing the frequency deviation from a center
-% frequency due to modulation according to the specified scheme. Optional
-% parameters are passed as <name>,<value> pairs.
+% frequency due to modulation according to the specified scheme.
 %
 % Inputs:
 %       f1      - Start frequency, Hz
@@ -21,12 +19,35 @@ function fm = GenerateBasebandModulation(f1,f2,T,fc,fs,scheme,varargin)
 %
 
 %% Check Inputs
-if nargin<7
-    alpha = 1;
-    beta = 0.9;
-end
 if nargin<8
     beta = 0.9;
+end
+if nargin<7
+    alpha = 1;
+end
+if ~isnumeric(f1) || ~isscalar(f1)
+    error([mfilename '(): Input f1 failed verification test.'])
+end
+if ~isnumeric(f2) || ~isscalar(f2)
+    error([mfilename '(): Input f2 failed verification test.'])
+end
+if ~isnumeric(T) || ~isscalar(T)
+    error([mfilename '(): Input T failed verification test.'])
+end
+if ~isnumeric(fc) || ~isscalar(fc)
+    error([mfilename '(): Input fc failed verification test.'])
+end
+if ~isnumeric(fs) || ~isscalar(fs)
+    error([mfilename '(): Input fs failed verification test.'])
+end
+if ~isnumeric(scheme) || ~isscalar(scheme)
+    error([mfilename '(): Input scheme failed verification test.'])
+end
+if ~isnumeric(alpha) || ~isscalar(alpha)
+    error([mfilename '(): Input alpha failed verification test.'])
+end
+if ~isnumeric(beta) || ~isscalar(beta) || beta>=1
+    error([mfilename '(): Input beta failed verification test.'])
 end
 %% Generate Time Vector
 t = (0:1/fs:T)';
