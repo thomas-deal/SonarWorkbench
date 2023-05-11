@@ -19,6 +19,7 @@ function DI = CalculateDI(theta,psi,BP)
 
 %% Computational Grid
 [Theta,~] = ndgrid(theta,psi);
+% Theta = repmat(theta(:),1,length(psi));
 %% Normalze
 BP = BP/max(abs(BP(:)));
 %% Integrate

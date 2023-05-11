@@ -3,8 +3,8 @@ Nw = 5;                                 % Number of elements wide
 Nh = 10;                                % Number of elements high
 dy = Element.params_m(1);               % Horizontal spacing, m
 dz = Element.params_m(2);               % Vertical spacing, m
-Array.Ne = Nw*Nh;                       % Number of elements
-Array.Net = 1;                          % Homogeneous array
+Array.Ne = int32(Nw*Nh);                % Number of elements
+Array.Net = int32(1);                   % Homogeneous array
 Array.Element = Element;
 Array.ePos_m = [zeros(1,Array.Ne); ...
                 repmat((-(Nw-1)/2:(Nw-1)/2)*dy,1,Nh); ...

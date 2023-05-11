@@ -3,15 +3,15 @@ close all
 %% Setup Path
 SetPath
 %% Define Elements
-Element(1).type = 0;
+Element(1).type = int32(0);
 Element(1).baffle = 0;
 Element(1).params_m = [0.1;0;0];
-Element(2).type = 1;
+Element(2).type = int32(1);
 Element(2).baffle = 0;
 Element(2).params_m = [0.1;0;0];
 %% Define Vector Sensor
-VS.Ne = 4;
-VS.Net = 2;
+VS.Ne = int32(4);
+VS.Net = int32(2);
 VS.Element = Element;
 VS.ePos_m = zeros(3,VS.Ne,1);
 VS.eOri_deg = [0  0  0  0; ...

@@ -33,7 +33,7 @@ if any([isnan(Theta(:)) isnan(Psi(:))])
 end
 %% Check Input Arguments
 a = lambda/4;
-baffle = 0;
+baffle = int32(0);
 if nargin<5
     ori = [0;0;0];
 end
@@ -42,7 +42,7 @@ if Element.params_m(1)~=0
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
-        baffle = Element.baffle;
+        baffle = int32(Element.baffle);
     end
 end
 %% Rotate Computational Grid
@@ -55,7 +55,7 @@ fr = sqrt(fy.^2+fz.^2);
 E = besselj(1,2*pi*fr*a)./(pi*fr*a);
 E(fr==0) = 1;
 %% Baffle Pattern
-if baffle>0
+if baffle>int32(0)
     Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end
