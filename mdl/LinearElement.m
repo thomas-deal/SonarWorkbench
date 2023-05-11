@@ -38,7 +38,7 @@ end
 %% Check Input Arguments
 L = lambda/2;
 eaxis = 2;
-baffle = 0;
+baffle = int32(0);
 if nargin<5
     ori = [0;0;0];
 end
@@ -54,7 +54,7 @@ elseif Element.params_m(3)~=0
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
-        baffle = Element.baffle;
+        baffle = int32(Element.baffle);
     end
 end
 %% Rotate Computational Grid
@@ -77,7 +77,7 @@ switch eaxis
 end
 E = sinc(fL*L);
 %% Baffle Pattern
-if baffle>0
+if baffle>int32(0)
     Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end

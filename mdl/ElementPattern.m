@@ -17,20 +17,20 @@ function E = ElementPattern(Element,lambda,theta,psi,ori)
 %
 
 %% Calculate
-switch Element.type
-    case 0
+switch int32(Element.type)
+    case int32(0)
         E = OmnidirectionalElement(Element,lambda,theta,psi,ori);
-    case 1
+    case int32(1)
         E = CosineElement(Element,lambda,theta,psi,ori);
-    case 2
+    case int32(2)
         E = LinearElement(Element,lambda,theta,psi,ori);
-    case 3
+    case int32(3)
         E = CircularPistonElement(Element,lambda,theta,psi,ori);
-    case 4
+    case int32(4)
         E = RectangularPistonElement(Element,lambda,theta,psi,ori);
-    case 5
+    case int32(5)
         E = HexagonalPistonElement(Element,lambda,theta,psi,ori);
-    case 6
+    case int32(6)
         E = AnnularPistonElement(Element,lambda,theta,psi,ori);
     otherwise
         E = OmnidirectionalElement(Element,lambda,theta,psi,ori);

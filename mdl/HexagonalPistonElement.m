@@ -36,7 +36,7 @@ if any([isnan(Theta(:)) isnan(Psi(:))])
 end
 %% Check Input Arguments
 a = lambda/4;
-baffle = 0;
+baffle = int32(0);
 if nargin<5
     ori = [0;0;0];
 end
@@ -45,7 +45,7 @@ if Element.params_m(1)~=0
 end
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
-        baffle = Element.baffle;
+        baffle = int32(Element.baffle);
     end
 end
 %% Rotate Computational Grid
@@ -79,7 +79,7 @@ E3 = conj(E1);
 E = E1 + E2 + E3;
 E = E/(2*sqrt(3)*a^2);                          % Area of Hexagon
 %% Baffle Pattern
-if baffle>0
+if baffle>int32(0)
     Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end

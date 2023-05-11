@@ -32,7 +32,7 @@ E = 1;
 %% Check Input Arguments
 w = lambda/2;
 h = lambda/2;
-baffle = 0;
+baffle = int32(0);
 if nargin<5
     ori = [0;0;0];
 end
@@ -44,7 +44,7 @@ if Element.params_m(2)~=0
 end  
 if isfield(Element,'baffle')
     if ~isempty(Element.baffle)
-        baffle = Element.baffle;
+        baffle = int32(Element.baffle);
     end
 end
 %% Rotate Computational Grid
@@ -55,7 +55,7 @@ fz = sind(-Theta)/lambda;
 %% Calculate Element Pattern
 E = sinc(fy*w).*sinc(fz*h);
 %% Baffle Pattern
-if baffle>0
+if baffle>int32(0)
     Baf = ComputeBaffle(baffle,Theta,Psi);
     E = E.*Baf;
 end

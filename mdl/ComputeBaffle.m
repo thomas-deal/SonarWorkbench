@@ -27,17 +27,18 @@ if any([isnan(Theta(:)) isnan(Psi(:))])
     return
 end
 %% Create Baffle
-if baffle>0
+baffle = int32(baffle);
+if baffle>int32(0)
     Phi = acosd(cosd(Psi).*cosd(Theta));
     switch baffle
-        case 1    % Hard baffle
+        case int32(1)   % Hard baffle
             B = ones(size(Theta));
             B(Phi>90) = eps;
-        case 2    % Raised cosine baffle
+        case int32(2)   % Raised cosine baffle
             B = 1/2+1/2*cosd(4*Phi);
             B(Phi<=90) = 1;
             B(Phi>135) = eps;
-        case 3    % Torpedo nose baffle
+        case int32(3)   % Torpedo nose baffle
             B = 1/2+1/2*cosd(4*(Phi-45));
             B(Phi<=45) = 1;
             B(Phi>90) = eps;
