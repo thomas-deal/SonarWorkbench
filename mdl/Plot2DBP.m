@@ -86,6 +86,10 @@ else
     figure
 end
 co = get(gca,'ColorOrderIndex');
+drawgrid = true;
+if ishold(gca)
+    drawgrid = false;
+end
 hold on
 switch PlotType
     case 1      % Rectangular plot, phi = x axis
@@ -94,27 +98,30 @@ switch PlotType
         grid on
     case 2      % Polar plot, phi 0 north, CW+     
         % Plot grid
-        axis off
-        axis equal   
-        patch(R*sind(0:360),R*cosd(0:360),[1 1 1])
-        plot(R*sind(0:360),R*cosd(0:360),'k')
-        for ph = 0:15:350
-            plot([rmin rmax]*sind(ph),[rmin rmax]*cosd(ph),'k:')
-            plot((rmax+[0 -dtick])*sind(ph),(rmax+[0 -dtick])*cosd(ph),'k')
-            text((rmax+dtxt)*sind(ph),(rmax+dtxt)*cosd(ph), ...
-                 num2str(wrap180(ph)), ...
-                 'Rotation',-ph, ...
-                 'HorizontalAlignment','center', ...
-                 'VerticalAlignment','bottom')
+        if drawgrid
+            axis off
+            axis equal   
+            patch(R*sind(0:360),R*cosd(0:360),[1 1 1])
+            plot(R*sind(0:360),R*cosd(0:360),'k')
+            for ph = 0:15:350
+                plot([rmin rmax]*sind(ph),[rmin rmax]*cosd(ph),'k:')
+                plot((rmax+[0 -dtick])*sind(ph), ...
+                     (rmax+[0 -dtick])*cosd(ph),'k')
+                text((rmax+dtxt)*sind(ph),(rmax+dtxt)*cosd(ph), ...
+                     num2str(wrap180(ph)), ...
+                     'Rotation',-ph, ...
+                     'HorizontalAlignment','center', ...
+                     'VerticalAlignment','bottom')
+            end
+            for r = rmin:dr:rmax-dr
+                plot(r*sind(0:360),r*cosd(0:360),'k:')
+                text(0,r,[num2str(dBScale(1)+r) ' '], ...
+                     'HorizontalAlignment','right', ...
+                     'VerticalAlignment','bottom')
+            end
+            plot(-axpad,-axpad,'LineStyle','none','marker','none')
+            plot(axpad,axpad,'LineStyle','none','marker','none')
         end
-        for r = rmin:dr:rmax-dr
-            plot(r*sind(0:360),r*cosd(0:360),'k:')
-            text(0,r,[num2str(dBScale(1)+r) ' '], ...
-                 'HorizontalAlignment','right', ...
-                 'VerticalAlignment','bottom')
-        end
-        plot(-axpad,-axpad,'LineStyle','none','marker','none')
-        plot(axpad,axpad,'LineStyle','none','marker','none')
         % Plot data
         set(gca,'ColorOrderIndex',co)
         hp = plot(y,x);
@@ -124,29 +131,32 @@ switch PlotType
         grid on
     case 4      % Polar plot, phi 0 east, CCW+
         % Plot grid
-        axis off
-        axis equal   
-        rmin = R + dBScale(1) + dr;
-        rmax = R + dBScale(2);
-        patch(R*cosd(0:360),R*sind(0:360),[1 1 1])
-        plot(R*cosd(0:360),R*sind(0:360),'k')
-        for ph = 0:15:350
-            plot([rmin rmax]*cosd(ph),[rmin rmax]*sind(ph),'k:')
-            plot((rmax+[0 -dtick])*cosd(ph),(rmax+[0 -dtick])*sind(ph),'k')
-            text((rmax+dtxt)*cosd(ph),(rmax+dtxt)*sind(ph), ...
-                 num2str(wrap180(ph)), ...
-                 'Rotation',ph-90, ...
-                 'HorizontalAlignment','center', ...
-                 'VerticalAlignment','bottom')
+        if drawgrid
+            axis off
+            axis equal   
+            rmin = R + dBScale(1) + dr;
+            rmax = R + dBScale(2);
+            patch(R*cosd(0:360),R*sind(0:360),[1 1 1])
+            plot(R*cosd(0:360),R*sind(0:360),'k')
+            for ph = 0:15:350
+                plot([rmin rmax]*cosd(ph),[rmin rmax]*sind(ph),'k:')
+                plot((rmax+[0 -dtick])*cosd(ph), ...
+                     (rmax+[0 -dtick])*sind(ph),'k')
+                text((rmax+dtxt)*cosd(ph),(rmax+dtxt)*sind(ph), ...
+                     num2str(wrap180(ph)), ...
+                     'Rotation',ph-90, ...
+                     'HorizontalAlignment','center', ...
+                     'VerticalAlignment','bottom')
+            end
+            for r = rmin:dr:rmax-dr
+                plot(r*cosd(0:360),r*sind(0:360),'k:')
+                text(r,0,num2str(dBScale(1)+r), ...
+                     'HorizontalAlignment','center', ...
+                     'VerticalAlignment','top')
+            end
+            plot(-axpad,-axpad,'LineStyle','none','marker','none')
+            plot(axpad,axpad,'LineStyle','none','marker','none')
         end
-        for r = rmin:dr:rmax-dr
-            plot(r*cosd(0:360),r*sind(0:360),'k:')
-            text(r,0,num2str(dBScale(1)+r), ...
-                 'HorizontalAlignment','center', ...
-                 'VerticalAlignment','top')
-        end
-        plot(-axpad,-axpad,'LineStyle','none','marker','none')
-        plot(axpad,axpad,'LineStyle','none','marker','none')
         % Plot data
         set(gca,'ColorOrderIndex',co)
         hp = plot(x,y);
