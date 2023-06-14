@@ -25,4 +25,4 @@ BP = BP/max(abs(BP(:)));
 %% Integrate
 F = BP.*conj(BP).*sind(Theta+90);
 D = 4*pi/trapz(theta*pi/180,trapz(psi*pi/180,F,2));
-DI = 10*log10(D);
+DI = 10*log10(abs(D));
