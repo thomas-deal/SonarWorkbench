@@ -27,4 +27,4 @@ BP2 = BP2/max(abs(BP2(:)));
 %% Integrate
 F = abs(BP1).*abs(BP2).*sind(Theta+90);
 D = 4*pi/trapz(theta*pi/180,trapz(psi*pi/180,F,2));
-Jv = 10*log10(D);
+Jv = 10*log10(abs(D));
